@@ -1,0 +1,10 @@
+<frame id="5276:8625" name="Frame 9247" x="234" y="1175" width="1032" height="384">
+  <frame id="5276:8626" name="Frame 9246" x="56" y="56" width="299" height="272">
+    <frame id="5276:8627" name="Frame 9259" x="0" y="0" width="299" height="184">
+      <instance id="5276:8628" name="Chip" x="0" y="0" width="96" height="32" />
+      <text id="5276:8629" name="분리수거장 설치부터 쓰레기 수거까지 전부 다 해드려요!" x="0" y="40" width="287" height="144" />
+    </frame>
+    <text id="5276:8630" name="원하는 날짜에, 음식물 쓰레기든 혼합 폐기물이든 상관없이 깔끔하게 수거해드릴게요. 이제 쓰레기 때문에 머리 아프지 마세요." x="0" y="200" width="299" height="72" />
+  </frame>
+  <rounded-rectangle id="5276:8631" name="풀필먼트@4x 1" x="502" y="56" width="474" height="268" />
+</frame>

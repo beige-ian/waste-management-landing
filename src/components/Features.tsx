@@ -1,5 +1,6 @@
 export const Features = () => {
-  const features = [
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _features = [
     {
       icon: '📱',
       title: '모바일 앱',

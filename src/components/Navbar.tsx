@@ -13,6 +13,7 @@ export const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const scrollToSignup = () => {
     const signupSection = document.getElementById('signup');
     signupSection?.scrollIntoView({ behavior: 'smooth' });

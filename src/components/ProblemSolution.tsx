@@ -1,10 +1,56 @@
 import { useState, useEffect, useRef } from 'react';
 import { RecyclingChart } from './RecyclingChart';
 
+// 숫자 카운트업 컴포넌트
+const CountUp = ({ end, duration, delay }: { end: number; duration: number; delay: number }) => {
+  const [count, setCount] = useState(0);
+  const [started, setStarted] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setStarted(true);
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [delay]);
+
+  useEffect(() => {
+    if (!started) return;
+
+    const start = Date.now();
+    const animate = () => {
+      const now = Date.now();
+      const progress = Math.min((now - start) / duration, 1);
+      setCount(Math.floor(end * progress));
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+
+    animate();
+  }, [started, end, duration]);
+
+  return <>{count}</>;
+};
+
 export const ProblemSolution = () => {
   const [displayValues, setDisplayValues] = useState({ hours: 0, complaints: 0, cost: 0 });
   const sectionRef = useRef<HTMLDivElement>(null);
   const [hasAnimated, setHasAnimated] = useState(false);
+
+  // 카드 애니메이션용
+  const [timeCardAnimated, setTimeCardAnimated] = useState(false);
+  const timeCardRef = useRef<HTMLDivElement>(null);
+
+  const [cycleCardAnimated, setCycleCardAnimated] = useState(false);
+  const cycleCardRef = useRef<HTMLDivElement>(null);
+
+  const [stressCardAnimated, setStressCardAnimated] = useState(false);
+  const stressCardRef = useRef<HTMLDivElement>(null);
+
+  const [costCardAnimated, setCostCardAnimated] = useState(false);
+  const costCardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -23,6 +69,78 @@ export const ProblemSolution = () => {
 
     return () => observer.disconnect();
   }, [hasAnimated]);
+
+  // 시간 카드 애니메이션
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !timeCardAnimated) {
+          setTimeCardAnimated(true);
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    if (timeCardRef.current) {
+      observer.observe(timeCardRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [timeCardAnimated]);
+
+  // 악순환 카드
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !cycleCardAnimated) {
+          setCycleCardAnimated(true);
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    if (cycleCardRef.current) {
+      observer.observe(cycleCardRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [cycleCardAnimated]);
+
+  // 스트레스 카드
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !stressCardAnimated) {
+          setStressCardAnimated(true);
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    if (stressCardRef.current) {
+      observer.observe(stressCardRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [stressCardAnimated]);
+
+  // 비용 카드
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !costCardAnimated) {
+          setCostCardAnimated(true);
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    if (costCardRef.current) {
+      observer.observe(costCardRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [costCardAnimated]);
 
   const animateNumbers = () => {
     const duration = 2000;
@@ -47,96 +165,295 @@ export const ProblemSolution = () => {
   };
 
   return (
-    <section className="py-24 px-4 bg-gradient-to-b from-white to-slate-50 relative overflow-hidden">
-      <div className="max-w-5xl mx-auto">
-        {/* 섹션 타이틀 */}
+    <section className="py-24 px-4 bg-gradient-to-b from-slate-50 to-white relative overflow-hidden">
+      {/* 배경 장식 - B2B 스타일 */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-50 via-slate-50 to-transparent opacity-40"></div>
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
+
+      <div className="max-w-6xl mx-auto relative z-10">
+        {/* 섹션 타이틀 - B2B 프로페셔널 스타일 */}
         <div className="mb-20 text-center animate-fade-in-up">
-          <p className="text-sm font-semibold tracking-wider uppercase mb-4" style={{ color: '#1AA3FF' }}>
-            건물주의 현실
-          </p>
-          <h2 className="text-5xl sm:text-6xl font-bold text-slate-900 mb-6 leading-tight">
-            매주 1시간, 민원 전화,<br />청소비는 자꾸만 늘어나
+          <span className="font-semibold text-base tracking-wider uppercase inline-block mb-6" style={{ color: '#1AA3FF' }}>
+            원룸 건물주의 솔직한 현실
+          </span>
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 mb-6 leading-tight tracking-tight">
+            주말도 없고, <span className="text-slate-700">전화벨 공포증</span> 생기고,<br />
+            <span className="text-slate-700">비용은 통제 불가</span>
           </h2>
-          <p className="text-xl text-slate-600 font-light max-w-3xl mx-auto leading-relaxed">
-            원룸·투룸을 관리하는 건물주분들이 정말로 겪고 있는 문제들입니다.<br />
-            <span className="text-slate-500">혼자가 아닙니다. 우리도 다 겪었습니다.</span>
-          </p>
+          <div className="max-w-4xl mx-auto mb-8">
+            <p className="text-xl sm:text-2xl text-slate-600 font-normal leading-relaxed mb-4">
+              "내가 왜 이걸 해야 하나" 자괴감 들 때 있으시죠?
+            </p>
+            <p className="text-base text-slate-500 leading-relaxed mb-3">
+              매주 2-3시간 분리수거장 청소하고, 저녁/주말 가리지 않는 민원 전화 받고,<br />
+              청소비는 예측 불가능하게 늘어나고... <span className="font-medium text-slate-700">혼자가 아닙니다.</span>
+            </p>
+            <p className="text-base" style={{ color: '#1AA3FF' }}>
+              <span className="font-medium">우리도 똑같이 겪었고, 해결했습니다.</span>
+            </p>
+          </div>
         </div>
 
-        {/* 실제 문제들 */}
-        <div className="space-y-5 mb-24">
-          {/* 문제 1 */}
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white via-red-50 to-red-100 border-2 border-red-200 p-10 shadow-2xl transition-shadow duration-300 stagger-item hover:shadow-3xl">
-            <div className="flex gap-8 items-start">
-              <div className="flex-shrink-0 w-24 h-24 bg-gradient-to-br from-red-200 to-red-100 rounded-3xl flex items-center justify-center ring-4 ring-red-300">
-                <img src="/trash-bin.png" alt="쓰레기통" className="w-14 h-14 object-contain" />
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-3">
-                  <h3 className="text-2xl font-black text-slate-900">매주 직접 가서 청소</h3>
-                  <span className="inline-block text-xs font-bold text-red-700 bg-red-200 px-4 py-2 rounded-full border border-red-300">반복 업무</span>
+        {/* 실제 문제들 - 2x2 그리드 */}
+        <div className="grid grid-cols-2 gap-6 mb-24">
+          {/* 문제 1 - 시간 시각화 */}
+          <div ref={timeCardRef} className="bg-slate-50 border border-slate-200 rounded-2xl p-10 hover:shadow-lg transition-all duration-300 flex flex-col">
+            <div className="flex items-start justify-between mb-4">
+              <span className="text-sm font-bold text-slate-400 uppercase tracking-wider">시간 낭비</span>
+            </div>
+
+            <h3 className="text-3xl font-bold text-slate-900 mb-3 leading-tight">
+              내 주말이 증발한다
+            </h3>
+
+            <p className="text-slate-600 text-base mb-8 leading-relaxed">
+              매주 토요일 아침, 분리수거장 가서 2-3시간 청소하고 정리하고...<br />
+              안 하면 입주민들이 마구 버려서 난장판 됩니다.
+            </p>
+
+            {/* 시간 시각화 */}
+            <div className="mt-auto pt-6 border-t border-slate-200">
+              {/* 주간 시간 블록 */}
+              <div className="mb-6">
+                <div className="text-sm font-semibold text-slate-500 mb-3">52주간 손실 시간</div>
+                <div className="flex gap-1">
+                  {[...Array(52)].map((_, i) => (
+                    <div
+                      key={i}
+                      className={`h-3 flex-1 rounded transition-all duration-500 ${timeCardAnimated ? 'opacity-100 scale-y-100' : 'opacity-0 scale-y-0'}`}
+                      style={{
+                        backgroundColor: i % 4 === 0 ? '#1AA3FF' : '#E8F4FF',
+                        opacity: timeCardAnimated ? (i % 4 === 0 ? 1 : 0.3) : 0,
+                        transitionDelay: `${i * 12}ms`,
+                        transformOrigin: 'bottom'
+                      }}
+                    ></div>
+                  ))}
                 </div>
-                <p className="text-slate-700 leading-relaxed text-base font-medium">
-                  분리수거장을 관리하지 않으면 입주민들이 마구 써버려요.<br />
-                  <span className="font-black text-red-600">매주 최소 1시간씩 낭비</span>되고, 시간이 쌓이면 <span className="font-black text-red-600">1달에 4시간 이상 낭비됩니다.</span>
-                </p>
+                <div className={`flex justify-between text-xs text-slate-400 mt-2 transition-opacity duration-700 ${timeCardAnimated ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '700ms' }}>
+                  <span>1주차</span>
+                  <span>52주차</span>
+                </div>
+              </div>
+
+              {/* 결과 */}
+              <div className={`bg-white border border-slate-200 p-5 rounded-xl transition-all duration-700 ${timeCardAnimated ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ transitionDelay: '900ms' }}>
+                <div className="flex items-end justify-between">
+                  <div>
+                    <div className="text-sm font-medium text-slate-500 mb-1">연간 총 손실</div>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-5xl font-black" style={{ color: '#1AA3FF' }}>
+                        {timeCardAnimated ? <CountUp end={156} duration={1500} delay={1100} /> : 0}
+                      </span>
+                      <span className="text-xl font-bold text-slate-600">시간</span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-xs font-medium text-slate-400 mb-1">= 근무일</div>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-5xl font-black" style={{ color: '#1AA3FF' }}>
+                        {timeCardAnimated ? <CountUp end={19} duration={1500} delay={1100} /> : 0}
+                      </span>
+                      <span className="text-xl font-bold text-slate-600">일</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* 문제 2 */}
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white via-orange-50 to-orange-100 border-2 border-orange-200 p-10 shadow-2xl transition-shadow duration-300 stagger-item hover:shadow-3xl">
-            <div className="flex gap-8 items-start">
-              <div className="flex-shrink-0 w-24 h-24 bg-gradient-to-br from-orange-200 to-orange-100 rounded-3xl flex items-center justify-center ring-4 ring-orange-300">
-                <img src="/truck.png" alt="수거 트럭" className="w-14 h-14 object-contain" />
+          {/* 문제 2 - 플로우 형태 */}
+          <div ref={cycleCardRef} className="bg-white border border-slate-200 rounded-2xl p-10 hover:shadow-lg transition-all duration-300 flex flex-col">
+            <div className="flex items-start justify-between mb-4">
+              <span className="text-sm font-bold text-slate-400 uppercase tracking-wider">악순환</span>
+            </div>
+
+            <h3 className="text-3xl font-bold text-slate-900 mb-3 leading-tight">
+              악순환의 시작
+            </h3>
+
+            <p className="text-slate-600 text-base mb-8 leading-relaxed">
+              한번 꼬이면 계속 돈 들어가는 구조입니다
+            </p>
+
+            {/* 플로우 체인 - 애니메이션 */}
+            <div className="mt-auto pt-6 border-t border-slate-200">
+              {/* Step 1 */}
+              <div className={`flex items-center gap-4 mb-3 transition-all duration-600 ${cycleCardAnimated ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`} style={{ transitionDelay: '100ms' }}>
+                <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-sm font-bold text-slate-700 flex-shrink-0">1</div>
+                <div className="text-base text-slate-900 font-semibold">관리 안 함</div>
               </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-3">
-                  <h3 className="text-2xl font-black text-slate-900">수거업체가 안 가져간다</h3>
-                  <span className="inline-block text-xs font-bold text-orange-700 bg-orange-200 px-4 py-2 rounded-full border border-orange-300">악순환</span>
+
+              {/* Arrow */}
+              <div className={`flex items-center gap-2 ml-5 mb-3 transition-all duration-400 ${cycleCardAnimated ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '300ms' }}>
+                <div className="w-0.5 h-8 bg-slate-200"></div>
+                <div className="text-slate-300 text-base">↓</div>
+              </div>
+
+              {/* Step 2 */}
+              <div className={`flex items-center gap-4 mb-3 transition-all duration-600 ${cycleCardAnimated ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`} style={{ transitionDelay: '400ms' }}>
+                <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-sm font-bold text-slate-700 flex-shrink-0">2</div>
+                <div className="text-base text-slate-900 font-semibold">지자체 수거 거부</div>
+              </div>
+
+              {/* Arrow */}
+              <div className={`flex items-center gap-2 ml-5 mb-3 transition-all duration-400 ${cycleCardAnimated ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '600ms' }}>
+                <div className="w-0.5 h-8 bg-slate-200"></div>
+                <div className="text-slate-300 text-base">↓</div>
+              </div>
+
+              {/* Step 3 */}
+              <div className={`flex items-center gap-4 mb-3 transition-all duration-600 ${cycleCardAnimated ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`} style={{ transitionDelay: '700ms' }}>
+                <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-sm font-bold text-slate-700 flex-shrink-0">3</div>
+                <div className="text-base text-slate-900 font-semibold">사설업체 의뢰</div>
+              </div>
+
+              {/* Arrow */}
+              <div className={`flex items-center gap-2 ml-5 mb-4 transition-all duration-400 ${cycleCardAnimated ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '900ms' }}>
+                <div className="w-0.5 h-8" style={{ background: 'linear-gradient(to bottom, #e2e8f0, #1AA3FF)' }}></div>
+                <div style={{ color: '#1AA3FF' }} className="text-base font-bold">↓</div>
+              </div>
+
+              {/* Result */}
+              <div className={`bg-blue-50 border-2 rounded-xl p-5 transition-all duration-700 ${cycleCardAnimated ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95'}`} style={{ borderColor: '#1AA3FF', transitionDelay: '1000ms' }}>
+                <div className="flex items-baseline gap-2 mb-2">
+                  <span className="text-5xl font-black" style={{ color: '#1AA3FF' }}>3-5</span>
+                  <span className="text-2xl font-bold" style={{ color: '#1AA3FF' }}>배</span>
                 </div>
-                <p className="text-slate-700 leading-relaxed text-base font-medium">
-                  수거장이 더럽고 관리가 안 되면 지자체 수거업체가 수거를 거부해요.<br />
-                  <span className="font-black text-orange-600">쓰레기 더미가 자꾸만 쌓이고,</span> <span className="font-black text-orange-600">입주민 불만은 더 커집니다.</span>
-                </p>
+                <div className="text-sm font-medium text-slate-600">비용 폭탄 (월 100만원 이상 가능)</div>
               </div>
             </div>
           </div>
 
-          {/* 문제 3 */}
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white via-amber-50 to-amber-100 border-2 border-amber-200 p-10 shadow-2xl transition-shadow duration-300 stagger-item hover:shadow-3xl">
-            <div className="flex gap-8 items-start">
-              <div className="flex-shrink-0 w-24 h-24 bg-gradient-to-br from-amber-200 to-amber-100 rounded-3xl flex items-center justify-center ring-4 ring-amber-300">
-                <img src="/angry-face.png" alt="화난 표정" className="w-14 h-14 object-contain" />
+          {/* 문제 3 - 스트레스 시각화 */}
+          <div ref={stressCardRef} className="bg-white border border-slate-200 rounded-2xl p-10 hover:shadow-lg transition-all duration-300 flex flex-col">
+            <div className="flex items-start justify-between mb-4">
+              <span className="text-sm font-bold text-slate-400 uppercase tracking-wider">스트레스</span>
+            </div>
+
+            <h3 className="text-3xl font-bold text-slate-900 mb-3 leading-tight">
+              전화벨만 울리면<br />심장이 철렁
+            </h3>
+
+            <p className="text-slate-600 text-base mb-8 leading-relaxed">
+              토요일 오후 9시, 일요일 아침 7시...<br />
+              "냄새난다", "벌레 많다", "왜 안 치우냐"
+            </p>
+
+            {/* 민원 전화 시각화 */}
+            <div className="mt-auto pt-6 border-t border-slate-200">
+              <div className="text-sm font-semibold text-slate-500 mb-4">주간 민원 패턴</div>
+
+              {/* 전화 아이콘 반복 */}
+              <div className="grid grid-cols-7 gap-2 mb-6">
+                {[...Array(7)].map((_, i) => (
+                  <div key={i} className="flex flex-col items-center gap-2">
+                    <div className="text-xs font-medium text-slate-400">
+                      {['월', '화', '수', '목', '금', '토', '일'][i]}
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                      {[...Array(i === 5 || i === 6 ? 2 : 1)].map((_, j) => (
+                        <div
+                          key={j}
+                          className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-500 ${
+                            stressCardAnimated ? 'opacity-100 scale-100' : 'opacity-0 scale-0'
+                          }`}
+                          style={{
+                            backgroundColor: i === 5 || i === 6 ? '#1AA3FF' : '#E8F4FF',
+                            transitionDelay: `${(i * 2 + j) * 90}ms`
+                          }}
+                        >
+                          <span className="text-sm">📞</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-3">
-                  <h3 className="text-2xl font-black text-slate-900">입주민 민원이 폭주</h3>
-                  <span className="inline-block text-xs font-bold text-amber-700 bg-amber-200 px-4 py-2 rounded-full border border-amber-300">스트레스</span>
+
+              {/* 결과 */}
+              <div className={`bg-slate-50 border border-slate-200 p-5 rounded-xl transition-all duration-700 ${stressCardAnimated ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ transitionDelay: '900ms' }}>
+                <div className="flex items-end justify-between">
+                  <div>
+                    <div className="text-sm font-medium text-slate-500 mb-1">평균 민원</div>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-5xl font-black" style={{ color: '#1AA3FF' }}>
+                        {stressCardAnimated ? <CountUp end={7} duration={1000} delay={1000} /> : 0}
+                      </span>
+                      <span className="text-xl font-bold text-slate-600">회/주</span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-xs font-medium text-slate-400">특히</div>
+                    <div className="text-base font-bold text-slate-600">주말 집중</div>
+                  </div>
                 </div>
-                <p className="text-slate-700 leading-relaxed text-base font-medium">
-                  <span className="font-black text-amber-600">"냄새난다", "벌레가 많다", "왜 안 치우냐"</span> 등<br />
-                  끊임없는 카톡, 전화가 와요. 관리자로서 <span className="font-black text-amber-600">정말 힘들고 스트레스가 많습니다.</span>
-                </p>
               </div>
             </div>
           </div>
 
-          {/* 문제 4 */}
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white via-rose-50 to-rose-100 border-2 border-rose-200 p-10 shadow-2xl transition-shadow duration-300 stagger-item hover:shadow-3xl">
-            <div className="flex gap-8 items-start">
-              <div className="flex-shrink-0 w-24 h-24 bg-gradient-to-br from-rose-200 to-rose-100 rounded-3xl flex items-center justify-center ring-4 ring-rose-300">
-                <img src="/영수증.png" alt="영수증" className="w-14 h-14 object-contain" />
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-3">
-                  <h3 className="text-2xl font-black text-slate-900">청소비 끝없이 증가</h3>
-                  <span className="inline-block text-xs font-bold text-rose-700 bg-rose-200 px-4 py-2 rounded-full border border-rose-300">재정 부담</span>
+          {/* 문제 4 - 비용 증가 시각화 */}
+          <div ref={costCardRef} className="bg-slate-50 border border-slate-200 rounded-2xl p-10 hover:shadow-lg transition-all duration-300 flex flex-col">
+            <div className="flex items-start justify-between mb-4">
+              <span className="text-sm font-bold text-slate-400 uppercase tracking-wider">재정 부담</span>
+            </div>
+
+            <h3 className="text-3xl font-bold text-slate-900 mb-3 leading-tight">
+              다음 달엔 또 얼마나 나올까
+            </h3>
+
+            <p className="text-slate-600 text-base mb-8 leading-relaxed">
+              예측 불가능한 비용에 재정 불안이 커집니다
+            </p>
+
+            {/* 비용 증가 바 - 애니메이션 */}
+            <div className="mt-auto pt-6 border-t border-slate-200">
+              <div className="text-sm font-semibold text-slate-500 mb-4">월별 비용 증가</div>
+              <div className="space-y-4 mb-6">
+                {/* 1월 */}
+                <div className={`flex items-center gap-4 transition-all duration-600 ${costCardAnimated ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`} style={{ transitionDelay: '100ms' }}>
+                  <div className="text-sm font-semibold text-slate-500 w-12">1월</div>
+                  <div className="flex-1 h-12 bg-white border border-slate-200 rounded-lg overflow-hidden relative">
+                    <div
+                      className={`h-full transition-all duration-900 ease-out ${costCardAnimated ? 'w-[40%]' : 'w-0'}`}
+                      style={{ backgroundColor: '#E8F4FF', transitionDelay: '200ms' }}
+                    ></div>
+                  </div>
+                  <div className={`text-base font-bold text-slate-700 w-16 text-right transition-opacity duration-500 ${costCardAnimated ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '1100ms' }}>20만</div>
                 </div>
-                <p className="text-slate-700 leading-relaxed text-base font-medium">
-                  청소비, 추가 수거 수수료, 혹은 직접 처리하면서 비용 부담이 늘어나요.<br />
-                  <span className="font-black text-rose-600">매달 적립금에서 나가는 돈이 계속 증가</span>해서 <span className="font-black text-rose-600">입주민 불만도 함께 증가합니다.</span>
-                </p>
+
+                {/* 2월 */}
+                <div className={`flex items-center gap-4 transition-all duration-600 ${costCardAnimated ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`} style={{ transitionDelay: '300ms' }}>
+                  <div className="text-sm font-semibold text-slate-500 w-12">2월</div>
+                  <div className="flex-1 h-12 bg-white border border-slate-200 rounded-lg overflow-hidden relative">
+                    <div
+                      className={`h-full transition-all duration-900 ease-out ${costCardAnimated ? 'w-[65%]' : 'w-0'}`}
+                      style={{ backgroundColor: '#7FC8FF', transitionDelay: '400ms' }}
+                    ></div>
+                  </div>
+                  <div className={`text-base font-bold text-slate-700 w-16 text-right transition-opacity duration-500 ${costCardAnimated ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '1300ms' }}>35만</div>
+                </div>
+
+                {/* 3월 */}
+                <div className={`flex items-center gap-4 transition-all duration-600 ${costCardAnimated ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`} style={{ transitionDelay: '500ms' }}>
+                  <div className="text-sm font-semibold text-slate-500 w-12">3월</div>
+                  <div className="flex-1 h-12 bg-white border-2 rounded-lg overflow-hidden relative" style={{ borderColor: '#1AA3FF' }}>
+                    <div
+                      className={`h-full transition-all duration-900 ease-out ${costCardAnimated ? 'w-full' : 'w-0'}`}
+                      style={{ backgroundColor: '#1AA3FF', transitionDelay: '600ms' }}
+                    ></div>
+                  </div>
+                  <div className={`text-base font-black w-16 text-right transition-opacity duration-500 ${costCardAnimated ? 'opacity-100' : 'opacity-0'}`} style={{ color: '#1AA3FF', transitionDelay: '1500ms' }}>50만+</div>
+                </div>
+              </div>
+
+              {/* 증가율 표시 */}
+              <div className={`bg-white border border-slate-200 p-5 rounded-xl transition-all duration-700 ${costCardAnimated ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`} style={{ transitionDelay: '1600ms' }}>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-5xl font-black" style={{ color: '#1AA3FF' }}>+150</span>
+                  <span className="text-2xl font-bold" style={{ color: '#1AA3FF' }}>%</span>
+                </div>
+                <div className="text-sm font-medium text-slate-600 mt-1">3개월간 증가율</div>
               </div>
             </div>
           </div>

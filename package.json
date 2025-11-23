@@ -10,8 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.22.0",
     "@supabase/supabase-js": "^2.84.0",
     "@tailwindcss/postcss": "^4.1.17",
+    "eventsource": "^4.1.0",
+    "node-fetch": "^3.3.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },

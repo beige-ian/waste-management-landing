@@ -1,30 +1,42 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { SuccessModal } from './SuccessModal';
+
+const cities = [
+  '서울시',
+  '부산시',
+  '대구시',
+  '인천시',
+  '광주시',
+  '대전시',
+  '울산시',
+  '세종시',
+  '경기도',
+  '강원도',
+  '충청북도',
+  '충청남도',
+  '전라북도',
+  '전라남도',
+  '경상북도',
+  '경상남도',
+  '제주도'
+];
 
 export const SignupForm = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    company: '',
-    buildingCount: '',
-    message: '',
-  });
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedCity, setSelectedCity] = useState('');
+  const [phone, setPhone] = useState('');
+  const [inquiry, setInquiry] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const handleCitySelect = (city: string) => {
+    setSelectedCity(city);
+    setIsDropdownOpen(false);
   };
 
-  const sendSlackMessage = async (data: typeof formData) => {
+  const sendSlackMessage = async () => {
     const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
     try {
@@ -33,7 +45,11 @@ export const SignupForm = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          city: selectedCity,
+          phone,
+          inquiry
+        }),
       });
 
       if (!response.ok) {
@@ -47,44 +63,36 @@ export const SignupForm = () => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
     try {
-      const { data, error: supabaseError } = await supabase
-        .from('signups')
-        .insert([
-          {
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            company: formData.company || null,
-            building_count: formData.buildingCount ? parseInt(formData.buildingCount) : null,
-            message: formData.message || null,
-            created_at: new Date().toISOString(),
-          },
-        ])
-        .select();
+      if (supabase) {
+        const { error: supabaseError } = await supabase
+          .from('signups')
+          .insert([
+            {
+              city: selectedCity,
+              phone: phone,
+              message: inquiry || null,
+              created_at: new Date().toISOString(),
+            },
+          ])
+          .select();
 
-      if (supabaseError) {
-        throw new Error(supabaseError.message);
+        if (supabaseError) {
+          throw new Error(supabaseError.message);
+        }
       }
 
-      await sendSlackMessage(formData);
+      await sendSlackMessage();
 
       setSubmitted(true);
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        company: '',
-        buildingCount: '',
-        message: '',
-      });
-
-      setTimeout(() => setSubmitted(false), 3000);
+      setSelectedCity('');
+      setPhone('');
+      setInquiry('');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : '신청 처리 중 오류가 발생했습니다.';
       setError(errorMessage);
@@ -95,146 +103,356 @@ export const SignupForm = () => {
   };
 
   return (
-    <section id="signup" className="py-20 px-4 bg-white">
-      <div className="max-w-2xl mx-auto">
-        <div className="mb-12 text-center animate-fade-in-up">
-          <p className="text-sm font-semibold mb-6" style={{ color: '#1AA3FF' }}>
-            100만 유저가 검증한 업계 1위 서비스 커버링에게 맡기세요
-          </p>
-          <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-4">
-            지금 시작하세요
-          </h2>
-          <p className="text-lg text-slate-600 font-light mt-6">
-            5분 안에 신청할 수 있습니다. 우리 팀이 24시간 내에 연락드립니다.
+    <>
+      {submitted && <SuccessModal onClose={() => setSubmitted(false)} />}
+
+      <section id="signup" style={{
+      padding: '120px 0',
+      background: '#F7F7F8'
+    }}>
+      <div style={{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        gap: '80px',
+        maxWidth: '1032px',
+        margin: '0 auto',
+        padding: '0 16px'
+      }}>
+        {/* 왼쪽: 텍스트 섹션 */}
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          gap: '12px',
+          width: '303px'
+        }}>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            gap: '4px',
+            width: '303px'
+          }}>
+            <span style={{
+              fontFamily: 'Pretendard',
+              fontWeight: 700,
+              fontSize: '20px',
+              lineHeight: '28px',
+              letterSpacing: '-0.005em',
+              color: '#66C7FF'
+            }}>
+              문의 시 24시간 내 연락 예정
+            </span>
+            <h2 style={{
+              fontFamily: 'Pretendard',
+              fontWeight: 700,
+              fontSize: '40px',
+              lineHeight: '52px',
+              letterSpacing: '-0.005em',
+              color: '#171719',
+              margin: 0
+            }}>
+              첫 달 무료체험 문의
+            </h2>
+          </div>
+          <p style={{
+            fontFamily: 'Pretendard',
+            fontWeight: 400,
+            fontSize: '16px',
+            lineHeight: '24px',
+            letterSpacing: '-0.005em',
+            color: '#5A5C63',
+            margin: 0,
+            width: '282px'
+          }}>
+            서비스 도입과 관련하여 궁금하신 사항을 보내주시면 빠른 시일 내에 연락드리겠습니다.
           </p>
         </div>
 
-        <div className="bg-slate-50 rounded-2xl p-8 sm:p-10 border border-slate-200 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-          {submitted && (
-            <div className="mb-6 p-4 rounded-lg text-sm" style={{ backgroundColor: '#E3F2FE', borderColor: '#1AA3FF', color: '#1565C0', borderWidth: '1px' }}>
-              ✓ 신청이 완료되었습니다. 곧 연락드리겠습니다.
-            </div>
-          )}
+        {/* 오른쪽: 폼 섹션 */}
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          padding: '40px',
+          gap: '24px',
+          width: '480px',
+          background: '#FFFFFF',
+          borderRadius: '40px'
+        }}>
+          <h3 style={{
+            fontFamily: 'Pretendard',
+            fontWeight: 700,
+            fontSize: '20px',
+            lineHeight: '28px',
+            letterSpacing: '-0.005em',
+            color: '#46474C',
+            margin: 0
+          }}>
+            커버링 빌딩 문의를 위한 정보를 입력해 주세요
+          </h3>
 
           {error && (
-            <div className="mb-6 p-4 bg-red-100 border border-red-400 text-red-800 rounded-lg text-sm">
+            <div style={{
+              padding: '12px 16px',
+              borderRadius: '8px',
+              background: '#FFEBEE',
+              border: '1px solid #FF6363',
+              color: '#C62828',
+              fontSize: '14px',
+              width: '100%',
+              boxSizing: 'border-box'
+            }}>
               문제가 발생했습니다: {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div>
-              <label className="block text-sm font-semibold text-slate-900 mb-2">
-                이름 *
+          <form onSubmit={handleSubmit} style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            gap: '16px',
+            width: '400px'
+          }}>
+            {/* 지역 드롭다운 */}
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              gap: '6px',
+              width: '100%'
+            }}>
+              <label style={{
+                fontFamily: 'Pretendard',
+                fontWeight: 700,
+                fontSize: '14px',
+                lineHeight: '20px',
+                letterSpacing: '-0.005em',
+                color: '#46474C'
+              }}>
+                지역
               </label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 text-sm"
-                style={{ '--tw-ring-color': '#1AA3FF' } as any}
-                placeholder="건물주 이름"
-              />
+              <div style={{ position: 'relative', width: '100%' }}>
+                <button
+                  type="button"
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  style={{
+                    boxSizing: 'border-box',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    padding: '16px',
+                    gap: '8px',
+                    width: '100%',
+                    height: '56px',
+                    background: '#FFFFFF',
+                    border: '1px solid #DBDCDF',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    fontFamily: 'Pretendard',
+                    fontSize: '16px',
+                    textAlign: 'left'
+                  }}
+                >
+                  <span style={{
+                    flex: 1,
+                    color: selectedCity ? '#171719' : '#C2C4C8'
+                  }}>
+                    {selectedCity || '서울시'}
+                  </span>
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    style={{
+                      transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                      transition: 'transform 0.2s'
+                    }}
+                  >
+                    <path d="M5 7.5L10 12.5L15 7.5" stroke="#A3AEC2" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+
+                {isDropdownOpen && (
+                  <div style={{
+                    position: 'absolute',
+                    zIndex: 10,
+                    width: '100%',
+                    marginTop: '4px',
+                    background: '#FFFFFF',
+                    border: '1px solid #DBDCDF',
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)',
+                    maxHeight: '240px',
+                    overflowY: 'auto'
+                  }}>
+                    {cities.map((city) => (
+                      <button
+                        key={city}
+                        type="button"
+                        onClick={() => handleCitySelect(city)}
+                        style={{
+                          width: '100%',
+                          padding: '12px 16px',
+                          textAlign: 'left',
+                          border: 'none',
+                          background: selectedCity === city ? '#F0F9FF' : '#FFFFFF',
+                          color: selectedCity === city ? '#1AA3FF' : '#171719',
+                          cursor: 'pointer',
+                          fontFamily: 'Pretendard',
+                          fontSize: '16px',
+                          fontWeight: selectedCity === city ? 600 : 400
+                        }}
+                        onMouseEnter={(e) => {
+                          if (selectedCity !== city) {
+                            e.currentTarget.style.background = '#F7F7F8';
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (selectedCity !== city) {
+                            e.currentTarget.style.background = '#FFFFFF';
+                          }
+                        }}
+                      >
+                        {city}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-semibold text-slate-900 mb-2">
-                이메일 *
-              </label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 text-sm"
-                style={{ '--tw-ring-color': '#1AA3FF' } as any}
-                placeholder="example@email.com"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-slate-900 mb-2">
-                연락처 *
+            {/* 담당자 번호 */}
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              gap: '6px',
+              width: '100%'
+            }}>
+              <label style={{
+                fontFamily: 'Pretendard',
+                fontWeight: 700,
+                fontSize: '14px',
+                lineHeight: '20px',
+                letterSpacing: '-0.005em',
+                color: '#46474C'
+              }}>
+                담당자 번호
               </label>
               <input
                 type="tel"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="010-1234-5678"
                 required
-                className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 text-sm"
-                style={{ '--tw-ring-color': '#1AA3FF' } as any}
-                placeholder="010-0000-0000"
+                style={{
+                  boxSizing: 'border-box',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  padding: '16px',
+                  width: '100%',
+                  height: '56px',
+                  background: '#FFFFFF',
+                  border: '1px solid #DBDCDF',
+                  borderRadius: '8px',
+                  fontFamily: 'Pretendard',
+                  fontSize: '16px',
+                  lineHeight: '24px',
+                  letterSpacing: '-0.005em',
+                  color: '#171719'
+                }}
               />
             </div>
 
-            <div className="grid sm:grid-cols-2 gap-5">
-              <div>
-                <label className="block text-sm font-semibold text-slate-900 mb-2">
-                  건물명/회사명
-                </label>
-                <input
-                  type="text"
-                  name="company"
-                  value={formData.company}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 text-sm"
-                  style={{ '--tw-ring-color': '#1AA3FF' } as any}
-                  placeholder="예: 강남빌딩"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-slate-900 mb-2">
-                  관리 건물 수
-                </label>
-                <input
-                  type="number"
-                  name="buildingCount"
-                  value={formData.buildingCount}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 text-sm"
-                  style={{ '--tw-ring-color': '#1AA3FF' } as any}
-                  placeholder="예: 5"
-                  min="1"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-slate-900 mb-2">
-                추가 질문사항
+            {/* 문의내용 (선택) */}
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              gap: '6px',
+              width: '100%'
+            }}>
+              <label style={{
+                fontFamily: 'Pretendard',
+                fontWeight: 700,
+                fontSize: '14px',
+                lineHeight: '20px',
+                letterSpacing: '-0.005em',
+                color: '#46474C'
+              }}>
+                문의내용(선택)
               </label>
               <textarea
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 text-sm h-20 resize-none"
-                style={{ '--tw-ring-color': '#1AA3FF' } as any}
-                placeholder="현재 겪고 있는 분리수거 문제가 있으면 작성해주세요"
+                value={inquiry}
+                onChange={(e) => setInquiry(e.target.value)}
+                placeholder="문의할 내용이 있으면 편하게 적어주세요."
+                style={{
+                  boxSizing: 'border-box',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  padding: '16px',
+                  width: '100%',
+                  height: '104px',
+                  background: '#FFFFFF',
+                  border: '1px solid #DBDCDF',
+                  borderRadius: '8px',
+                  fontFamily: 'Pretendard',
+                  fontSize: '16px',
+                  lineHeight: '24px',
+                  letterSpacing: '-0.005em',
+                  color: '#171719',
+                  resize: 'none'
+                }}
               />
             </div>
 
+            {/* 제출 버튼 */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full text-white py-3 rounded-lg font-semibold text-base transition duration-300"
-              style={{ backgroundColor: loading ? '#94A3B8' : '#1AA3FF' }}
-              onMouseEnter={(e) => !loading && (e.currentTarget.style.backgroundColor = '#1680CC')}
-              onMouseLeave={(e) => !loading && (e.currentTarget.style.backgroundColor = '#1AA3FF')}
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: '14px 20px',
+                width: '100%',
+                height: '56px',
+                background: loading ? '#94A3B8' : '#23AFFF',
+                borderRadius: '8px',
+                border: 'none',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                fontFamily: 'Pretendard',
+                fontWeight: 700,
+                fontSize: '20px',
+                lineHeight: '28px',
+                textAlign: 'center',
+                letterSpacing: '-0.005em',
+                color: '#FFFFFF'
+              }}
+              onMouseEnter={(e) => {
+                if (!loading) {
+                  e.currentTarget.style.background = '#1A9EEB';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!loading) {
+                  e.currentTarget.style.background = '#23AFFF';
+                }
+              }}
             >
-              {loading ? '처리 중...' : '상담 신청하기'}
+              {loading ? '처리 중...' : '첫 달 무료체험 문의하기'}
             </button>
-
-            <p className="text-center text-slate-500 text-xs">
-              개인정보는 안전하게 보호됩니다.
-            </p>
           </form>
         </div>
       </div>
     </section>
+    </>
   );
 };

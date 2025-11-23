@@ -95,7 +95,7 @@ export const Hero = () => {
           onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#1680CC')}
           onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#1AA3FF')}
         >
-          상담 신청하기
+          1달 무료 체험하기
         </button>
 
           {/* 신뢰도 */}

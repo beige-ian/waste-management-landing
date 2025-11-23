@@ -110,19 +110,20 @@ const DonutChart = ({ label, value, color, source, isHighlight }: DonutChartProp
           {/* 퍼센트 텍스트 */}
           <text
             x="130"
-            y="125"
+            y="140"
             textAnchor="middle"
             fontSize={isHighlight ? '52' : '44'}
             fontWeight="700"
             fill={color}
             style={{ transition: 'font-size 0.3s ease-out' }}
+            dominantBaseline="middle"
           >
             {animatedValue}%
           </text>
           {value > animatedValue && (
             <text
               x="130"
-              y="150"
+              y="165"
               textAnchor="middle"
               fontSize="16"
               fontWeight="600"
@@ -140,7 +141,7 @@ const DonutChart = ({ label, value, color, source, isHighlight }: DonutChartProp
         <div className={`font-bold mb-2 ${isHighlight ? 'text-lg text-slate-900' : 'text-base text-slate-700'}`}>
           {label}
         </div>
-        <div className="text-xs text-slate-500">{source}</div>
+        <div className="text-sm text-slate-500">{source}</div>
       </div>
     </div>
   );
@@ -152,7 +153,7 @@ export const RecyclingChart = () => {
       <div className="max-w-6xl mx-auto">
         {/* 섹션 타이틀 */}
         <div className="text-center mb-20 animate-fade-in-up">
-          <p className="text-sm font-semibold tracking-wider uppercase mb-4" style={{ color: '#1AA3FF' }}>
+          <p className="text-base font-semibold tracking-wider uppercase mb-4" style={{ color: '#1AA3FF' }}>
             재활용률의 현실
           </p>
           <h2 className="text-5xl sm:text-6xl font-bold text-slate-900 mb-6 leading-tight">

@@ -13,12 +13,6 @@ export const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToSignup = () => {
-    const signupSection = document.getElementById('signup');
-    signupSection?.scrollIntoView({ behavior: 'smooth' });
-    setIsMobileMenuOpen(false);
-  };
-
   return (
     <nav
       className={`fixed w-full top-0 z-50 transition duration-500 ease-out ${

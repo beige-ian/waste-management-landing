@@ -1,29 +1,25 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+// Vercel Serverless Function
+export default async function handler(req, res) {
+  // CORS 헤더 설정
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  );
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+  // OPTIONS 요청 처리 (CORS preflight)
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
 
-// 프로젝트 루트의 .env.local 파일 읽기
-dotenv.config({ path: join(__dirname, '../.env.local') });
+  // POST 요청만 허용
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
 
-const app = express();
-const PORT = process.env.PORT || 3001;
-
-// Middleware
-app.use(cors());
-app.use(express.json());
-
-// Health check
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok' });
-});
-
-// Slack webhook endpoint
-app.post('/api/send-slack', async (req, res) => {
   const slackWebhookUrl = process.env.VITE_SLACK_WEBHOOK_URL;
 
   if (!slackWebhookUrl) {
@@ -102,9 +98,4 @@ app.post('/api/send-slack', async (req, res) => {
     console.error('Error sending Slack message:', error);
     res.status(500).json({ error: error.message });
   }
-});
-
-app.listen(PORT, () => {
-  console.log(`✅ Server running at http://localhost:${PORT}`);
-  console.log(`📞 Slack webhook endpoint: POST http://localhost:${PORT}/api/send-slack`);
-});
+}

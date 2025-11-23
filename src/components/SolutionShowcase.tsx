@@ -1,7 +1,7 @@
 export const SolutionShowcase = () => {
   return (
     <section className="py-24 px-4 bg-white">
-      <div className="max-w-7xl mx-auto space-y-12">
+      <div className="max-w-6xl mx-auto space-y-12">
         {/* Frame 9247 - 첫 번째 솔루션 */}
         <div className="hidden lg:flex justify-between items-start p-14 gap-20 w-full h-96 bg-white border border-slate-100 rounded-3xl shadow-sm animate-fade-in-up">
           {/* 좌측 텍스트 컨테이너 */}

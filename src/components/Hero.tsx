@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 
 export const Hero = () => {
+  // Hero section with counters and fade-in animations
   const [counts, setCounts] = useState({ users: 0, buildings: 0, waste: 0 });
   const sectionRef = useRef<HTMLDivElement>(null);
   const [hasAnimated, setHasAnimated] = useState(false);

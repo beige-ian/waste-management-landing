@@ -143,7 +143,7 @@ export const Hero = () => {
           <img
             src="/분리수거함_hero.png"
             alt="분리수거함"
-            className="w-full h-auto drop-shadow-2xl animate-float"
+            className="w-full h-auto drop-shadow-2xl"
           />
         </div>
       </div>

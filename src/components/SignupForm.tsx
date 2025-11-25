@@ -118,7 +118,7 @@ export const SignupForm = () => {
               무료 견적 문의하기
             </h2>
           </div>
-          <p className="font-bold text-lg md:text-xl leading-7 tracking-tight text-[#5A5C63] m-0 w-full">
+          <p className="font-bold text-xl md:text-2xl leading-8 tracking-tight m-0 w-full" style={{ color: '#FF6B35' }}>
             12월 내 계약 시 즉시 25만원 할인해드려요!
           </p>
         </div>

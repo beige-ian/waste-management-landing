@@ -110,7 +110,7 @@ const DonutChart = ({ label, value, color, source, isHighlight }: DonutChartProp
           {/* 퍼센트 텍스트 */}
           <text
             x="130"
-            y="125"
+            y="135"
             textAnchor="middle"
             fontSize={isHighlight ? '52' : '44'}
             fontWeight="700"
@@ -119,19 +119,6 @@ const DonutChart = ({ label, value, color, source, isHighlight }: DonutChartProp
           >
             {animatedValue}%
           </text>
-          {value > animatedValue && (
-            <text
-              x="130"
-              y="150"
-              textAnchor="middle"
-              fontSize="16"
-              fontWeight="600"
-              fill={color}
-              opacity="0.7"
-            >
-              이상
-            </text>
-          )}
         </svg>
       </div>
 

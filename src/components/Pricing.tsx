@@ -1,13 +1,4 @@
 export const Pricing = () => {
-  const features = [
-    '재활용 분리수거 교육',
-    '정기 수거 서비스',
-    '실시간 수거 현황 리포트',
-    '전담 매니저 배정',
-    '민원 발생 시 즉시 대응',
-    '환경부 신고 대행',
-  ];
-
   const scrollToSignup = () => {
     const signupSection = document.getElementById('signup');
     if (signupSection) {
@@ -15,65 +6,150 @@ export const Pricing = () => {
     }
   };
 
+  const plans = [
+    {
+      name: '80L 키트',
+      price: '7,500',
+      unit: '/회',
+      note: '야간수거 기준',
+      caseTitle: '스타트업 A사 이용 사례',
+      features: [
+        { main: '10인 이내 사무실 또는 스타트업 추천', sub: null },
+        { main: '월 예산 60,000원 가량', sub: null },
+        { main: '주 2회(월/금) 수거', sub: '수거 수/키트 수 자율 조정 가능' },
+      ],
+      buttonText: '2주 무료체험 신청하기',
+      highlighted: false,
+      image: '/80L키트.png',
+    },
+    {
+      name: '120L 키트',
+      price: '12,000',
+      unit: '/회',
+      note: '야간수거 기준',
+      caseTitle: '기업 B사 이용 사례',
+      features: [
+        { main: '20인 이내 사무실 또는 기업 추천', sub: null },
+        { main: '월 예산 144,000원 가량', sub: null },
+        { main: '주 3회(월/수/금) 수거', sub: '수거 수/키트 수 자율 조정 가능' },
+      ],
+      buttonText: '2주 무료체험 신청하기',
+      highlighted: true,
+      image: '/120L키트.png',
+    },
+    {
+      name: '커스텀',
+      price: '?',
+      unit: '/회',
+      note: '상담 시 견적 제공',
+      caseTitle: '기업 C사 이용 사례',
+      features: [
+        { main: '30인 이상 사무실 또는 기업 추천', sub: null },
+        { main: '감이 잡히지 않는 경우 추천', sub: null },
+        { main: '수거 일 수 상담 후 조정', sub: '수거 수/키트 수 자율 조정 가능' },
+      ],
+      buttonText: '상담 신청하기',
+      highlighted: false,
+      image: '/커스텀키트.png',
+    },
+  ];
+
   return (
-    <section className="py-16 md:py-24 bg-gradient-to-b from-blue-50 to-white">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6">
+    <section className="py-20 md:py-32 bg-white">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        {/* Header */}
         <div className="text-center mb-12">
-          <p className="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-2">
-            PRICING
+          <p className="text-xl font-bold text-[#69a5ff] mb-1">
+            상황에 맞는 다양한 플랜
           </p>
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
-            합리적인 가격으로 시작하세요
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
+            우리 사무실에 맞는 플랜은?
           </h2>
-          <p className="text-gray-600">
-            모든 서비스가 포함된 단일 요금제
-          </p>
         </div>
 
-        <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden max-w-lg mx-auto">
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-8 text-center text-white">
-            <p className="text-sm font-medium opacity-90 mb-2">월 정기 구독</p>
-            <div className="flex items-baseline justify-center gap-1">
-              <span className="text-5xl font-bold">15</span>
-              <span className="text-2xl font-medium">만원</span>
-            </div>
-            <p className="text-sm opacity-75 mt-2">VAT 별도</p>
-          </div>
-
-          <div className="p-8">
-            <p className="text-sm font-semibold text-gray-900 mb-4">
-              포함된 서비스
-            </p>
-            <ul className="space-y-3">
-              {features.map((feature, index) => (
-                <li key={index} className="flex items-center gap-3">
-                  <svg
-                    className="w-5 h-5 text-blue-600 flex-shrink-0"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span className="text-gray-700">{feature}</span>
-                </li>
-              ))}
-            </ul>
-
-            <button
-              onClick={scrollToSignup}
-              className="w-full mt-8 py-4 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors duration-200 shadow-lg shadow-blue-600/25"
+        {/* Pricing Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {plans.map((plan, index) => (
+            <div
+              key={index}
+              className={`bg-white rounded-3xl p-6 flex flex-col ${
+                plan.highlighted
+                  ? 'border-4 border-[#69a5ff]'
+                  : 'border border-gray-200'
+              }`}
             >
-              무료 견적 문의하기
-            </button>
+              {/* Product Image */}
+              <div className="h-60 flex items-center justify-center mb-6 rounded-3xl bg-white">
+                <img
+                  src={plan.image}
+                  alt={plan.name}
+                  className="max-h-full max-w-full object-contain"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                  }}
+                />
+              </div>
 
-            <p className="text-center text-sm text-gray-500 mt-4">
-              계약 전 무료 컨설팅 제공
-            </p>
-          </div>
+              {/* Plan Name & Price */}
+              <div className="text-center mb-6">
+                <p className="text-xl font-bold text-[#70737c] mb-2">
+                  {plan.name}
+                </p>
+                <div className="flex items-baseline justify-center gap-2">
+                  <span className="text-3xl font-bold text-[#46474c]">
+                    {plan.price}원
+                  </span>
+                  <span className="text-base text-[#c2c4c8]">{plan.unit}</span>
+                </div>
+                <p className="text-sm text-[#70737c] mt-1">{plan.note}</p>
+              </div>
+
+              {/* Case Study */}
+              <div className="flex-grow">
+                <p className="text-sm font-bold text-[#3385ff] text-center mb-2">
+                  {plan.caseTitle}
+                </p>
+                <div className="bg-[#eaf2fe] rounded-2xl p-3 space-y-2">
+                  {plan.features.map((feature, fIndex) => (
+                    <div key={fIndex} className="flex gap-2 items-start">
+                      <svg
+                        className="w-6 h-6 text-[#3385ff] flex-shrink-0"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      <div>
+                        <p className="text-base font-bold text-[#46474c]">
+                          {feature.main}
+                        </p>
+                        {feature.sub && (
+                          <p className="text-sm text-[#70737c]">{feature.sub}</p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* CTA Button */}
+              <button
+                onClick={scrollToSignup}
+                className={`w-full mt-6 py-3 px-4 rounded-lg font-bold text-base transition-colors ${
+                  plan.highlighted
+                    ? 'bg-[#3385ff] text-white hover:bg-blue-600'
+                    : 'border border-[#69a5ff] text-[#3385ff] hover:bg-blue-50'
+                }`}
+              >
+                {plan.buttonText}
+              </button>
+            </div>
+          ))}
         </div>
       </div>
     </section>

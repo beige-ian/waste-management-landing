@@ -4,11 +4,11 @@ export const Features = () => {
       <div className="max-w-6xl mx-auto">
         {/* 섹션 타이틀 */}
         <div className="flex flex-col items-center gap-1 mb-12 text-center animate-fade-in-up">
-          <p className="font-bold text-xl text-center tracking-tight" style={{ color: '#23AFFF' }}>
+          <p className="font-bold text-2xl sm:text-3xl text-center tracking-tight" style={{ color: '#23AFFF' }}>
             커버링 빌딩의 수거 과정
           </p>
           <h2 className="text-5xl font-bold text-center tracking-tight" style={{ color: '#171719' }}>
-            간단한 수거로 더 편리하게
+            수거함 여부와 상관없이 모든 쓰레기 해결
           </h2>
         </div>
 
@@ -37,7 +37,7 @@ export const Features = () => {
 
               {/* 설명 */}
               <p className="font-normal text-base text-center tracking-tight leading-6" style={{ color: '#5A5C63' }}>
-                원하는 위치를 지정해 주시면 분리수거함을 설치해 드려요.
+                수거함을 꼭 사용하지 않으셔도 돼요.
               </p>
             </div>
           </div>

@@ -68,7 +68,7 @@ export const SuccessModal = ({ onClose }: SuccessModalProps) => {
                   margin: 0,
                   whiteSpace: 'pre'
                 }}>
-                  첫 달 무료체험 문의하기 신청 완료!
+                  무료 견적 문의 완료!
                 </p>
               </div>
 

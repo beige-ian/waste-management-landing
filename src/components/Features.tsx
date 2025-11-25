@@ -3,7 +3,7 @@ export const Features = () => {
     <section className="py-32 px-4 bg-white">
       <div className="max-w-6xl mx-auto">
         {/* 섹션 타이틀 */}
-        <div className="flex flex-col items-center gap-1 mb-12 text-center animate-fade-in-up">
+        <div className="flex flex-col items-center gap-4 mb-12 text-center animate-fade-in-up">
           <p className="font-bold text-2xl sm:text-3xl text-center tracking-tight" style={{ color: '#23AFFF' }}>
             커버링 빌딩의 수거 과정
           </p>

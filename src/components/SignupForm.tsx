@@ -119,7 +119,7 @@ export const SignupForm = () => {
             </h2>
           </div>
           <p className="font-bold text-xl md:text-2xl leading-8 tracking-tight m-0 w-full" style={{ color: '#FF6B35' }}>
-            12월 내 계약 시 즉시 25만원 할인해드려요!
+            12월 내 계약 시 25만원 할인
           </p>
         </div>
 

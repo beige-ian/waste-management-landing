@@ -3,6 +3,8 @@ import { Hero } from './components/Hero';
 import { ProblemSolution } from './components/ProblemSolution';
 import { Features } from './components/Features';
 import { CaseStudy } from './components/CaseStudy';
+import { References } from './components/References';
+import { Pricing } from './components/Pricing';
 import { SignupForm } from './components/SignupForm';
 import { FAQ } from './components/FAQ';
 import { Footer } from './components/Footer';
@@ -15,6 +17,8 @@ function App() {
       <ProblemSolution />
       <Features />
       <CaseStudy />
+      <References />
+      <Pricing />
       <SignupForm />
       <FAQ />
       <Footer />

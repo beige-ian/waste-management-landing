@@ -66,23 +66,23 @@ export const Footer = () => {
             <h4 className="font-bold mb-6 text-white text-base">서비스</h4>
             <ul className="space-y-3">
               <li>
-                <a href="#features" className="text-slate-400 hover:text-blue-500 transition-colors duration-300 text-sm block">
-                  주요 기능
+                <a href="https://www.covering.app" className="text-slate-400 hover:text-blue-500 transition-colors duration-300 text-sm block" target="_blank" rel="noopener noreferrer">
+                  커버링 홈
                 </a>
               </li>
               <li>
-                <a href="#" className="text-slate-400 hover:text-blue-500 transition-colors duration-300 text-sm block">
-                  고객 사례
+                <a href="https://www.covering.app/lunch" className="text-slate-400 hover:text-blue-500 transition-colors duration-300 text-sm block" target="_blank" rel="noopener noreferrer">
+                  런치
                 </a>
               </li>
               <li>
-                <a href="#faq" className="text-slate-400 hover:text-blue-500 transition-colors duration-300 text-sm block">
-                  자주 묻는 질문
+                <a href="https://www.covering.app/office" className="text-slate-400 hover:text-blue-500 transition-colors duration-300 text-sm block" target="_blank" rel="noopener noreferrer">
+                  오피스
                 </a>
               </li>
               <li>
-                <a href="#" className="text-slate-400 hover:text-blue-500 transition-colors duration-300 text-sm block">
-                  가격 정책
+                <a href="https://www.covering.app/spot" className="text-slate-400 hover:text-blue-500 transition-colors duration-300 text-sm block" target="_blank" rel="noopener noreferrer">
+                  스팟
                 </a>
               </li>
             </ul>
@@ -120,28 +120,25 @@ export const Footer = () => {
             <h4 className="font-bold mb-6 text-white text-base">문의하기</h4>
             <ul className="space-y-4">
               <li>
-                <div className="text-xs text-slate-500 mb-1">전화</div>
-                <a
-                  href="tel:02-1234-5678"
-                  className="text-blue-400 hover:text-blue-300 transition-colors duration-300 text-sm font-medium block"
-                >
-                  02-1234-5678
-                </a>
-              </li>
-              <li>
                 <div className="text-xs text-slate-500 mb-1">이메일</div>
                 <a
-                  href="mailto:contact@covering.kr"
+                  href="mailto:support@covering.app"
                   className="text-blue-400 hover:text-blue-300 transition-colors duration-300 text-sm font-medium block break-all"
                 >
-                  contact@covering.kr
+                  support@covering.app
                 </a>
               </li>
               <li>
-                <div className="text-xs text-slate-500 mb-1">주소</div>
+                <div className="text-xs text-slate-500 mb-1">본사</div>
                 <p className="text-slate-400 text-sm leading-relaxed">
-                  서울특별시 강남구<br />
-                  테헤란로 123
+                  서울특별시 종로구 새문안로5길 13, 1104호
+                </p>
+              </li>
+              <li>
+                <div className="text-xs text-slate-500 mb-1">사업자정보</div>
+                <p className="text-slate-400 text-sm leading-relaxed">
+                  사업자등록번호: 621-87-01772<br />
+                  통신판매업: 제 2024-서울중구-1863 호
                 </p>
               </li>
             </ul>
@@ -153,19 +150,26 @@ export const Footer = () => {
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             {/* 저작권 */}
             <p className="text-slate-500 text-sm text-center md:text-left">
-              &copy; {currentYear} 커버링(Covering). All rights reserved.
+              Copyright &copy; {currentYear} Covering Co. Ltd. | 누구나 처리를 간편하게 All rights reserved.
             </p>
 
             {/* 약관 링크 */}
             <div className="flex flex-wrap gap-6 text-sm justify-center md:justify-end">
-              <a href="#" className="text-slate-500 hover:text-blue-400 transition-colors duration-300">
-                개인정보 처리방침
+              <a
+                href="https://covering.notion.site/2025-01-10-1665e589dc9f8027bcb1cf230b5f4c85?pvs=4"
+                className="text-slate-500 hover:text-blue-400 transition-colors duration-300"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                개인정보처리방침
               </a>
-              <a href="#" className="text-slate-500 hover:text-blue-400 transition-colors duration-300">
-                이용약관
-              </a>
-              <a href="#" className="text-slate-500 hover:text-blue-400 transition-colors duration-300">
-                쿠키 정책
+              <a
+                href="https://covering.notion.site/2025-01-10-1665e589dc9f80d3b12eec6dfb6fb15d?pvs=4"
+                className="text-slate-500 hover:text-blue-400 transition-colors duration-300"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                서비스 이용약관
               </a>
             </div>
           </div>

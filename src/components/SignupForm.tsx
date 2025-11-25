@@ -106,160 +106,48 @@ export const SignupForm = () => {
     <>
       {submitted && <SuccessModal onClose={() => setSubmitted(false)} />}
 
-      <section id="signup" style={{
-      padding: '120px 0',
-      background: '#F7F7F8'
-    }}>
-      <div style={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
-        gap: '80px',
-        maxWidth: '1032px',
-        margin: '0 auto',
-        padding: '0 16px'
-      }}>
+      <section id="signup" className="py-16 md:py-[120px] bg-[#F7F7F8] px-4">
+      <div className="flex flex-col md:flex-row justify-between items-start gap-8 md:gap-20 max-w-[1032px] mx-auto">
         {/* 왼쪽: 텍스트 섹션 */}
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-start',
-          gap: '12px',
-          width: '303px'
-        }}>
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-            gap: '4px',
-            width: '303px'
-          }}>
-            <span style={{
-              fontFamily: 'Pretendard',
-              fontWeight: 700,
-              fontSize: '20px',
-              lineHeight: '28px',
-              letterSpacing: '-0.005em',
-              color: '#66C7FF'
-            }}>
+        <div className="flex flex-col items-start gap-3 w-full md:w-[303px]">
+          <div className="flex flex-col items-start gap-1 w-full">
+            <span className="font-bold text-lg md:text-xl leading-7 tracking-tight text-[#66C7FF]">
               문의 시 24시간 내 연락 예정
             </span>
-            <h2 style={{
-              fontFamily: 'Pretendard',
-              fontWeight: 700,
-              fontSize: '40px',
-              lineHeight: '52px',
-              letterSpacing: '-0.005em',
-              color: '#171719',
-              margin: 0
-            }}>
+            <h2 className="font-bold text-3xl md:text-[40px] leading-tight md:leading-[52px] tracking-tight text-[#171719] m-0">
               첫 달 무료체험 문의
             </h2>
           </div>
-          <p style={{
-            fontFamily: 'Pretendard',
-            fontWeight: 400,
-            fontSize: '16px',
-            lineHeight: '24px',
-            letterSpacing: '-0.005em',
-            color: '#5A5C63',
-            margin: 0,
-            width: '282px'
-          }}>
+          <p className="font-normal text-base leading-6 tracking-tight text-[#5A5C63] m-0 w-full md:w-[282px]">
             서비스 도입과 관련하여 궁금하신 사항을 보내주시면 빠른 시일 내에 연락드리겠습니다.
           </p>
         </div>
 
         {/* 오른쪽: 폼 섹션 */}
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-start',
-          padding: '40px',
-          gap: '24px',
-          width: '480px',
-          background: '#FFFFFF',
-          borderRadius: '40px'
-        }}>
-          <h3 style={{
-            fontFamily: 'Pretendard',
-            fontWeight: 700,
-            fontSize: '20px',
-            lineHeight: '28px',
-            letterSpacing: '-0.005em',
-            color: '#46474C',
-            margin: 0
-          }}>
+        <div className="flex flex-col items-start p-6 md:p-10 gap-6 w-full md:w-[480px] bg-white rounded-[40px]">
+          <h3 className="font-bold text-lg md:text-xl leading-7 tracking-tight text-[#46474C] m-0">
             커버링 빌딩 문의를 위한 정보를 입력해 주세요
           </h3>
 
           {error && (
-            <div style={{
-              padding: '12px 16px',
-              borderRadius: '8px',
-              background: '#FFEBEE',
-              border: '1px solid #FF6363',
-              color: '#C62828',
-              fontSize: '14px',
-              width: '100%',
-              boxSizing: 'border-box'
-            }}>
+            <div className="p-3 md:p-4 rounded-lg bg-[#FFEBEE] border border-[#FF6363] text-[#C62828] text-sm w-full">
               문제가 발생했습니다: {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-            gap: '16px',
-            width: '400px'
-          }}>
+          <form onSubmit={handleSubmit} className="flex flex-col items-start gap-4 w-full">
             {/* 지역 드롭다운 */}
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-start',
-              gap: '6px',
-              width: '100%'
-            }}>
-              <label style={{
-                fontFamily: 'Pretendard',
-                fontWeight: 700,
-                fontSize: '14px',
-                lineHeight: '20px',
-                letterSpacing: '-0.005em',
-                color: '#46474C'
-              }}>
+            <div className="flex flex-col items-start gap-1.5 w-full">
+              <label className="font-bold text-sm leading-5 tracking-tight text-[#46474C]">
                 지역
               </label>
-              <div style={{ position: 'relative', width: '100%' }}>
+              <div className="relative w-full">
                 <button
                   type="button"
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  style={{
-                    boxSizing: 'border-box',
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    padding: '16px',
-                    gap: '8px',
-                    width: '100%',
-                    height: '56px',
-                    background: '#FFFFFF',
-                    border: '1px solid #DBDCDF',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    fontFamily: 'Pretendard',
-                    fontSize: '16px',
-                    textAlign: 'left'
-                  }}
+                  className="box-border flex flex-row items-center p-4 gap-2 w-full h-14 bg-white border border-[#DBDCDF] rounded-lg cursor-pointer font-['Pretendard'] text-base text-left"
                 >
-                  <span style={{
-                    flex: 1,
-                    color: selectedCity ? '#171719' : '#C2C4C8'
-                  }}>
+                  <span className={`flex-1 ${selectedCity ? 'text-[#171719]' : 'text-[#C2C4C8]'}`}>
                     {selectedCity || '서울시'}
                   </span>
                   <svg
@@ -267,55 +155,24 @@ export const SignupForm = () => {
                     height="20"
                     viewBox="0 0 20 20"
                     fill="none"
-                    style={{
-                      transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                      transition: 'transform 0.2s'
-                    }}
+                    className={`transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : 'rotate-0'}`}
                   >
                     <path d="M5 7.5L10 12.5L15 7.5" stroke="#A3AEC2" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </button>
 
                 {isDropdownOpen && (
-                  <div style={{
-                    position: 'absolute',
-                    zIndex: 10,
-                    width: '100%',
-                    marginTop: '4px',
-                    background: '#FFFFFF',
-                    border: '1px solid #DBDCDF',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)',
-                    maxHeight: '240px',
-                    overflowY: 'auto'
-                  }}>
+                  <div className="absolute z-10 w-full mt-1 bg-white border border-[#DBDCDF] rounded-lg shadow-[0_4px_16px_rgba(0,0,0,0.1)] max-h-60 overflow-y-auto">
                     {cities.map((city) => (
                       <button
                         key={city}
                         type="button"
                         onClick={() => handleCitySelect(city)}
-                        style={{
-                          width: '100%',
-                          padding: '12px 16px',
-                          textAlign: 'left',
-                          border: 'none',
-                          background: selectedCity === city ? '#F0F9FF' : '#FFFFFF',
-                          color: selectedCity === city ? '#1AA3FF' : '#171719',
-                          cursor: 'pointer',
-                          fontFamily: 'Pretendard',
-                          fontSize: '16px',
-                          fontWeight: selectedCity === city ? 600 : 400
-                        }}
-                        onMouseEnter={(e) => {
-                          if (selectedCity !== city) {
-                            e.currentTarget.style.background = '#F7F7F8';
-                          }
-                        }}
-                        onMouseLeave={(e) => {
-                          if (selectedCity !== city) {
-                            e.currentTarget.style.background = '#FFFFFF';
-                          }
-                        }}
+                        className={`w-full p-3 md:px-4 text-left border-none cursor-pointer font-['Pretendard'] text-base transition-colors ${
+                          selectedCity === city
+                            ? 'bg-[#F0F9FF] text-[#1AA3FF] font-semibold'
+                            : 'bg-white text-[#171719] font-normal hover:bg-[#F7F7F8]'
+                        }`}
                       >
                         {city}
                       </button>
@@ -326,21 +183,8 @@ export const SignupForm = () => {
             </div>
 
             {/* 담당자 번호 */}
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-start',
-              gap: '6px',
-              width: '100%'
-            }}>
-              <label style={{
-                fontFamily: 'Pretendard',
-                fontWeight: 700,
-                fontSize: '14px',
-                lineHeight: '20px',
-                letterSpacing: '-0.005em',
-                color: '#46474C'
-              }}>
+            <div className="flex flex-col items-start gap-1.5 w-full">
+              <label className="font-bold text-sm leading-5 tracking-tight text-[#46474C]">
                 담당자 번호
               </label>
               <input
@@ -349,66 +193,20 @@ export const SignupForm = () => {
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="010-1234-5678"
                 required
-                style={{
-                  boxSizing: 'border-box',
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  padding: '16px',
-                  width: '100%',
-                  height: '56px',
-                  background: '#FFFFFF',
-                  border: '1px solid #DBDCDF',
-                  borderRadius: '8px',
-                  fontFamily: 'Pretendard',
-                  fontSize: '16px',
-                  lineHeight: '24px',
-                  letterSpacing: '-0.005em',
-                  color: '#171719'
-                }}
+                className="box-border flex flex-row items-center p-4 w-full h-14 bg-white border border-[#DBDCDF] rounded-lg font-['Pretendard'] text-base leading-6 tracking-tight text-[#171719]"
               />
             </div>
 
             {/* 문의내용 (선택) */}
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-start',
-              gap: '6px',
-              width: '100%'
-            }}>
-              <label style={{
-                fontFamily: 'Pretendard',
-                fontWeight: 700,
-                fontSize: '14px',
-                lineHeight: '20px',
-                letterSpacing: '-0.005em',
-                color: '#46474C'
-              }}>
+            <div className="flex flex-col items-start gap-1.5 w-full">
+              <label className="font-bold text-sm leading-5 tracking-tight text-[#46474C]">
                 문의내용(선택)
               </label>
               <textarea
                 value={inquiry}
                 onChange={(e) => setInquiry(e.target.value)}
                 placeholder="문의할 내용이 있으면 편하게 적어주세요."
-                style={{
-                  boxSizing: 'border-box',
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  padding: '16px',
-                  width: '100%',
-                  height: '104px',
-                  background: '#FFFFFF',
-                  border: '1px solid #DBDCDF',
-                  borderRadius: '8px',
-                  fontFamily: 'Pretendard',
-                  fontSize: '16px',
-                  lineHeight: '24px',
-                  letterSpacing: '-0.005em',
-                  color: '#171719',
-                  resize: 'none'
-                }}
+                className="box-border p-4 w-full h-26 bg-white border border-[#DBDCDF] rounded-lg font-['Pretendard'] text-base leading-6 tracking-tight text-[#171719] resize-none"
               />
             </div>
 
@@ -416,36 +214,11 @@ export const SignupForm = () => {
             <button
               type="submit"
               disabled={loading}
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                padding: '14px 20px',
-                width: '100%',
-                height: '56px',
-                background: loading ? '#94A3B8' : '#23AFFF',
-                borderRadius: '8px',
-                border: 'none',
-                cursor: loading ? 'not-allowed' : 'pointer',
-                fontFamily: 'Pretendard',
-                fontWeight: 700,
-                fontSize: '20px',
-                lineHeight: '28px',
-                textAlign: 'center',
-                letterSpacing: '-0.005em',
-                color: '#FFFFFF'
-              }}
-              onMouseEnter={(e) => {
-                if (!loading) {
-                  e.currentTarget.style.background = '#1A9EEB';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!loading) {
-                  e.currentTarget.style.background = '#23AFFF';
-                }
-              }}
+              className={`flex flex-row justify-center items-center px-5 py-3.5 w-full h-14 rounded-lg border-none font-['Pretendard'] font-bold text-lg md:text-xl leading-7 text-center tracking-tight text-white transition-colors ${
+                loading
+                  ? 'bg-[#94A3B8] cursor-not-allowed'
+                  : 'bg-[#23AFFF] cursor-pointer hover:bg-[#1A9EEB]'
+              }`}
             >
               {loading ? '처리 중...' : '첫 달 무료체험 문의하기'}
             </button>

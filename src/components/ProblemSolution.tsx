@@ -173,37 +173,22 @@ export const ProblemSolution = () => {
       <div className="max-w-6xl mx-auto relative z-10">
         {/* 섹션 타이틀 - B2B 프로페셔널 스타일 */}
         <div className="mb-20 text-center animate-fade-in-up">
-          <span className="font-semibold text-base tracking-wider uppercase inline-block mb-6" style={{ color: '#1AA3FF' }}>
-            원룸 건물주의 솔직한 현실
-          </span>
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 mb-6 leading-tight tracking-tight">
-            주말도 없고, <span className="text-slate-700">전화벨 공포증</span> 생기고,<br />
-            <span className="text-slate-700">비용은 통제 불가</span>
+            주말도 없고, <span className="text-slate-700">지겨운 민원전화</span>
           </h2>
           <div className="max-w-4xl mx-auto mb-8">
             <p className="text-xl sm:text-2xl text-slate-600 font-normal leading-relaxed mb-4">
               "내가 왜 이걸 해야 하나" 자괴감 들 때 있으시죠?
             </p>
-            <p className="text-base text-slate-500 leading-relaxed mb-3">
-              매주 2-3시간 분리수거장 청소하고, 저녁/주말 가리지 않는 민원 전화 받고,<br />
-              청소비는 예측 불가능하게 늘어나고... <span className="font-medium text-slate-700">혼자가 아닙니다.</span>
-            </p>
-            <p className="text-base" style={{ color: '#1AA3FF' }}>
-              <span className="font-medium">우리도 똑같이 겪었고, 해결했습니다.</span>
-            </p>
           </div>
         </div>
 
         {/* 실제 문제들 - 2x2 그리드 */}
-        <div className="grid grid-cols-2 gap-6 mb-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-24">
           {/* 문제 1 - 시간 시각화 */}
           <div ref={timeCardRef} className="bg-slate-50 border border-slate-200 rounded-2xl p-10 hover:shadow-lg transition-all duration-300 flex flex-col">
-            <div className="flex items-start justify-between mb-4">
-              <span className="text-sm font-bold text-slate-400 uppercase tracking-wider">시간 낭비</span>
-            </div>
-
             <h3 className="text-3xl font-bold text-slate-900 mb-3 leading-tight">
-              내 주말이 증발한다
+              매주 3시간씩 소모되는 문제
             </h3>
 
             <p className="text-slate-600 text-base mb-8 leading-relaxed">
@@ -264,12 +249,8 @@ export const ProblemSolution = () => {
 
           {/* 문제 2 - 플로우 형태 */}
           <div ref={cycleCardRef} className="bg-white border border-slate-200 rounded-2xl p-10 hover:shadow-lg transition-all duration-300 flex flex-col">
-            <div className="flex items-start justify-between mb-4">
-              <span className="text-sm font-bold text-slate-400 uppercase tracking-wider">악순환</span>
-            </div>
-
             <h3 className="text-3xl font-bold text-slate-900 mb-3 leading-tight">
-              악순환의 시작
+              지자체 수거 거부 문제
             </h3>
 
             <p className="text-slate-600 text-base mb-8 leading-relaxed">
@@ -327,10 +308,6 @@ export const ProblemSolution = () => {
 
           {/* 문제 3 - 스트레스 시각화 */}
           <div ref={stressCardRef} className="bg-white border border-slate-200 rounded-2xl p-10 hover:shadow-lg transition-all duration-300 flex flex-col">
-            <div className="flex items-start justify-between mb-4">
-              <span className="text-sm font-bold text-slate-400 uppercase tracking-wider">스트레스</span>
-            </div>
-
             <h3 className="text-3xl font-bold text-slate-900 mb-3 leading-tight">
               전화벨만 울리면<br />심장이 철렁
             </h3>
@@ -394,10 +371,6 @@ export const ProblemSolution = () => {
 
           {/* 문제 4 - 비용 증가 시각화 */}
           <div ref={costCardRef} className="bg-slate-50 border border-slate-200 rounded-2xl p-10 hover:shadow-lg transition-all duration-300 flex flex-col">
-            <div className="flex items-start justify-between mb-4">
-              <span className="text-sm font-bold text-slate-400 uppercase tracking-wider">재정 부담</span>
-            </div>
-
             <h3 className="text-3xl font-bold text-slate-900 mb-3 leading-tight">
               다음 달엔 또 얼마나 나올까
             </h3>
@@ -535,20 +508,9 @@ export const ProblemSolution = () => {
 
         {/* Figma 노드 5276-8625: 원스탑 서비스 */}
         <div className="mb-24 animate-fade-in-up">
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-start',
-            padding: '56px',
-            gap: '80px',
-            background: '#ffffff',
-            border: '1px solid #f4f4f5',
-            borderRadius: '40px',
-            position: 'relative',
-            width: '100%',
-          }}>
+          <div className="flex flex-col md:flex-row justify-between items-start p-6 sm:p-10 md:p-14 gap-8 md:gap-12 lg:gap-20 bg-white border border-slate-100 rounded-3xl md:rounded-[40px] w-full">
             {/* 왼쪽: 텍스트 영역 */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '50%' }}>
+            <div className="flex flex-col gap-4 w-full md:max-w-[50%]">
               {/* Chip */}
               <div style={{
                 background: '#eaf2fe',
@@ -595,22 +557,11 @@ export const ProblemSolution = () => {
             </div>
 
             {/* 오른쪽: 트럭 이미지 */}
-            <div style={{
-              width: '474px',
-              height: '268px',
-              flexShrink: 0,
-              borderRadius: '20px',
-              overflow: 'hidden',
-              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-            }}>
+            <div className="w-full md:w-[474px] h-64 md:h-[268px] flex-shrink-0 rounded-2xl overflow-hidden shadow-md">
               <img
                 src="/truck.png"
                 alt="수거 트럭"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                }}
+                className="w-full h-full object-cover"
               />
             </div>
           </div>
@@ -618,21 +569,9 @@ export const ProblemSolution = () => {
 
         {/* Figma 노드 5276-8632: 비용 절감 */}
         <div className="mb-24 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-start',
-            padding: '56px',
-            gap: '80px',
-            background: '#ffffff',
-            border: '1px solid #f4f4f5',
-            borderRadius: '40px',
-            position: 'relative',
-            width: '100%',
-            flexDirection: 'row-reverse',
-          }}>
+          <div className="flex flex-col md:flex-row-reverse justify-between items-start p-6 sm:p-10 md:p-14 gap-8 md:gap-12 lg:gap-20 bg-white border border-slate-100 rounded-3xl md:rounded-[40px] w-full">
             {/* 오른쪽: 텍스트 영역 */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '50%' }}>
+            <div className="flex flex-col gap-4 w-full md:max-w-[50%]">
               {/* Chip */}
               <div style={{
                 background: '#eaf2fe',
@@ -682,22 +621,11 @@ export const ProblemSolution = () => {
             </div>
 
             {/* 왼쪽: 영수증 이미지 */}
-            <div style={{
-              width: '576px',
-              height: '632px',
-              flexShrink: 0,
-              borderRadius: '20px',
-              overflow: 'hidden',
-              boxShadow: '0 8px 28px -6px rgba(24,39,75,0.12), 0 18px 88px -4px rgba(24,39,75,0.14)',
-            }}>
+            <div className="w-full md:w-[576px] h-80 md:h-[632px] flex-shrink-0 rounded-2xl overflow-hidden shadow-2xl">
               <img
                 src="/영수증.png"
                 alt="비용 절감 영수증"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                }}
+                className="w-full h-full object-cover"
               />
             </div>
           </div>

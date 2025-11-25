@@ -27,185 +27,64 @@ export const CaseStudy = () => {
   ];
 
   return (
-    <section style={{
-      background: '#F7F7F8',
-      padding: '120px 0',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: '48px'
-    }}>
+    <section className="bg-[#F7F7F8] py-16 md:py-[120px] px-4 flex flex-col items-center justify-center gap-8 md:gap-12">
       {/* Header */}
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '4px',
-        width: '100%',
-        maxWidth: '1032px'
-      }}>
-        <p style={{
-          fontFamily: 'Pretendard',
-          fontWeight: 700,
-          fontSize: '20px',
-          lineHeight: '28px',
-          letterSpacing: '-0.1px',
-          color: '#69A5FF',
-          margin: 0
-        }}>
+      <div className="flex flex-col gap-1 w-full max-w-[1032px]">
+        <p className="font-bold text-lg md:text-xl leading-7 tracking-tight text-[#69A5FF] m-0">
           먼저 써본 건물주들의 후기
         </p>
-        <div style={{
-          fontFamily: 'Pretendard',
-          fontWeight: 700,
-          fontSize: '40px',
-          lineHeight: '52px',
-          letterSpacing: '-0.2px',
-          color: '#171719'
-        }}>
+        <h2 className="font-bold text-3xl md:text-[40px] leading-tight md:leading-[52px] tracking-tight text-[#171719]">
           쓰레기 처리 스트레스로 부터 벗어난
-          <br />
-          고객님들의 이야기를 들려드릴께요
-        </div>
+          <br className="hidden md:block" />
+          <span className="md:hidden"> </span>고객님들의 이야기를 들려드릴께요
+        </h2>
       </div>
 
       {/* Cards Container */}
-      <div style={{
-        display: 'flex',
-        gap: '24px',
-        width: '100%',
-        maxWidth: '1032px'
-      }}>
+      <div className="flex flex-col md:flex-row gap-6 md:gap-6 w-full max-w-[1032px]">
         {testimonials.map((testimonial, index) => (
           <div
             key={index}
-            style={{
-              width: '328px',
-              background: '#FFFFFF',
-              borderRadius: '40px',
-              padding: '24px 16px 16px 16px',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '40px',
-              boxShadow: '0px 8px 18px -6px rgba(24,39,75,0.12), 0px 12px 42px -4px rgba(24,39,75,0.12)'
-            }}
+            className="w-full md:w-[328px] bg-white rounded-[40px] p-6 md:px-4 md:pt-6 md:pb-4 flex flex-col items-center gap-8 md:gap-10 shadow-[0px_8px_18px_-6px_rgba(24,39,75,0.12),0px_12px_42px_-4px_rgba(24,39,75,0.12)]"
           >
             {/* Speech Bubble */}
-            <div style={{
-              background: '#FFFFFF',
-              borderRadius: '16px',
-              padding: '16px',
-              position: 'relative',
-              boxShadow: '0px 2px 8px -6px rgba(24,39,75,0.12), 0px 8px 16px -6px rgba(24,39,75,0.08)'
-            }}>
-              <p style={{
-                fontFamily: 'Pretendard',
-                fontWeight: 700,
-                fontSize: '16px',
-                lineHeight: '24px',
-                letterSpacing: '-0.08px',
-                color: '#5A5C63',
-                margin: 0
-              }}>
+            <div className="bg-white rounded-2xl p-4 relative shadow-[0px_2px_8px_-6px_rgba(24,39,75,0.12),0px_8px_16px_-6px_rgba(24,39,75,0.08)]">
+              <p className="font-bold text-base leading-6 tracking-tight text-[#5A5C63] m-0">
                 {testimonial.quote}
               </p>
               {/* Triangle pointer */}
-              <div style={{
-                position: 'absolute',
-                bottom: '-10px',
-                left: 'calc(50% + 55px)',
-                width: 0,
-                height: 0,
-                borderLeft: '12px solid transparent',
-                borderRight: '12px solid transparent',
-                borderTop: '12px solid #FFFFFF',
-                filter: 'drop-shadow(0px 2px 2px rgba(24,39,75,0.08))'
-              }} />
+              <div className="absolute -bottom-[10px] left-[calc(50%+55px)] w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-t-[12px] border-t-white drop-shadow-[0px_2px_2px_rgba(24,39,75,0.08)]" />
             </div>
 
             {/* Emoji */}
-            <div style={{
-              fontSize: '80px',
-              lineHeight: '80px'
-            }}>
+            <div className="text-[60px] md:text-[80px] leading-[60px] md:leading-[80px]">
               {testimonial.emoji}
             </div>
 
             {/* Name and Description */}
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '12px',
-              alignItems: 'center',
-              textAlign: 'center',
-              width: '100%'
-            }}>
-              <p style={{
-                fontFamily: 'Pretendard',
-                fontWeight: 700,
-                fontSize: '24px',
-                lineHeight: '32px',
-                letterSpacing: '-0.12px',
-                color: '#46474C',
-                margin: 0
-              }}>
+            <div className="flex flex-col gap-3 items-center text-center w-full">
+              <p className="font-bold text-xl md:text-2xl leading-8 tracking-tight text-[#46474C] m-0">
                 {testimonial.name}
               </p>
-              <p style={{
-                fontFamily: 'Pretendard',
-                fontWeight: 400,
-                fontSize: '16px',
-                lineHeight: '24px',
-                letterSpacing: '-0.08px',
-                color: '#5A5C63',
-                margin: 0,
-                whiteSpace: 'pre-line'
-              }}>
+              <p className="font-normal text-base leading-6 tracking-tight text-[#5A5C63] m-0 whitespace-pre-line">
                 {testimonial.description}
               </p>
             </div>
 
             {/* Before/After Images */}
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '4px',
-              alignItems: 'center',
-              width: '100%'
-            }}>
+            <div className="flex flex-col gap-1 items-center w-full">
               {/* Before Image */}
               <img
                 src={testimonial.beforeImage}
                 alt="Before"
-                style={{
-                  width: '100%',
-                  height: '200px',
-                  objectFit: 'cover',
-                  borderRadius: '32px'
-                }}
+                className="w-full h-48 md:h-[200px] object-cover rounded-[32px]"
               />
-              <p style={{
-                fontFamily: 'Pretendard',
-                fontWeight: 700,
-                fontSize: '13px',
-                lineHeight: '18px',
-                letterSpacing: '-0.065px',
-                color: '#C2C4C8',
-                margin: 0,
-                textAlign: 'center'
-              }}>
+              <p className="font-bold text-xs md:text-[13px] leading-[18px] tracking-tight text-[#C2C4C8] m-0 text-center">
                 Before
               </p>
 
               {/* Arrow Icon */}
-              <div style={{
-                width: '40px',
-                height: '40px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
+              <div className="w-10 h-10 flex items-center justify-center">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                   <path d="M7 10L12 15L17 10" stroke="#C2C4C8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
@@ -215,23 +94,9 @@ export const CaseStudy = () => {
               <img
                 src={testimonial.afterImage}
                 alt="After"
-                style={{
-                  width: '100%',
-                  height: '280px',
-                  objectFit: 'cover',
-                  borderRadius: '32px'
-                }}
+                className="w-full h-64 md:h-[280px] object-cover rounded-[32px]"
               />
-              <p style={{
-                fontFamily: 'Pretendard',
-                fontWeight: 700,
-                fontSize: '13px',
-                lineHeight: '18px',
-                letterSpacing: '-0.065px',
-                color: '#23AFFF',
-                margin: 0,
-                textAlign: 'center'
-              }}>
+              <p className="font-bold text-xs md:text-[13px] leading-[18px] tracking-tight text-[#23AFFF] m-0 text-center">
                 After
               </p>
             </div>

@@ -51,21 +51,14 @@ export const Hero = () => {
   };
 
   return (
-    <section className="text-white pt-32 pb-32 px-4 relative overflow-hidden mt-16 sm:mt-20" ref={sectionRef} style={{
-      backgroundImage: 'url(/분리수거함_hero.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundAttachment: 'fixed'
-    }}>
-      {/* 배경 오버레이 - 텍스트 가독성 확보 */}
-      <div className="absolute inset-0 bg-black opacity-50 -z-10"></div>
+    <section className="text-white pt-32 pb-32 px-4 relative overflow-hidden mt-16 sm:mt-20 hero-section" ref={sectionRef}>
+      {/* 배경 오버레이 - 텍스트 가독성 확보 및 채도 낮추기 */}
+      <div className="absolute inset-0 bg-black opacity-90 -z-10"></div>
 
       {/* 프라이머리 블루 그라데이션 오버레이 */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-transparent opacity-40 -z-10"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-transparent opacity-60 -z-10"></div>
 
-      <div className="max-w-6xl mx-auto flex items-center justify-between gap-12 relative z-10">
-        {/* 왼쪽 텍스트 */}
-        <div className="flex-1">
+      <div className="max-w-6xl mx-auto relative z-10">
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight" style={{ animationDelay: '0.2s' }}>
           {'건물주님 이제 분리수거장 관리는'.split('').map((char, i) => (
             <span key={i} className="char" style={{ animationDelay: `${0.2 + i * 0.08}s`, whiteSpace: 'pre' }}>
@@ -99,8 +92,8 @@ export const Hero = () => {
         </button>
 
           {/* 신뢰도 */}
-          <div className="mt-20 pt-16 border-t border-slate-700">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
+          <div className="mt-20">
+            <div className="grid grid-cols-2 gap-4 sm:gap-8 md:gap-12 lg:gap-16">
               <div className="flex flex-col items-start">
                 <div className="flex items-baseline gap-1 mb-2 sm:mb-3">
                   <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight" style={{ color: '#1AA3FF' }}>
@@ -136,17 +129,31 @@ export const Hero = () => {
               </div>
             </div>
           </div>
-        </div>
-
-        {/* 오른쪽 이미지 */}
-        <div className="flex-1 hidden lg:block animate-fade-in-right" style={{ animationDelay: '0.3s' }}>
-          <img
-            src="/분리수거함_hero.png"
-            alt="분리수거함"
-            className="w-full h-auto drop-shadow-2xl animate-float"
-          />
-        </div>
       </div>
+
+      <style>{`
+        .hero-section {
+          background-image: url(/분리수거함_hero.png);
+          background-size: cover;
+          background-position: center center;
+          background-repeat: no-repeat;
+        }
+
+        /* 모바일에서는 scroll로 설정 */
+        @media (max-width: 768px) {
+          .hero-section {
+            background-attachment: scroll;
+            background-position: center center;
+          }
+        }
+
+        /* 데스크톱에서는 fixed로 패럴랙스 효과 */
+        @media (min-width: 769px) {
+          .hero-section {
+            background-attachment: fixed;
+          }
+        }
+      `}</style>
     </section>
   );
 };

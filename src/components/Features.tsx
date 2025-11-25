@@ -13,11 +13,11 @@ export const Features = () => {
         </div>
 
         {/* 3단계 프로세스 */}
-        <div className="flex justify-center items-center gap-2 bg-slate-50 border border-slate-200 rounded-[40px] p-0 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+        <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-2 bg-slate-50 border border-slate-200 rounded-[40px] p-4 md:p-0 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
           {/* Step 1: 수거함 설치 */}
-          <div className="flex flex-col items-center py-8 px-4 gap-10 flex-1 rounded-[40px]">
+          <div className="flex flex-col items-center py-6 md:py-8 px-4 gap-6 md:gap-10 flex-1 rounded-[40px] w-full md:w-auto">
             {/* 이미지 */}
-            <div className="w-52 h-44 bg-white border border-slate-200 rounded-[32px] overflow-hidden flex items-center justify-center">
+            <div className="w-full max-w-[208px] h-44 bg-white border border-slate-200 rounded-[32px] overflow-hidden flex items-center justify-center">
               <img src="/수거함.png" alt="수거함 설치" className="w-full h-full object-cover" />
             </div>
 
@@ -43,16 +43,22 @@ export const Features = () => {
           </div>
 
           {/* Arrow Icon */}
-          <div className="w-8 h-8 flex items-center justify-center">
+          <div className="w-8 h-8 flex items-center justify-center md:block hidden">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M7.5 5L12.5 10L7.5 15" stroke="#66C7FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
+          {/* Mobile down arrow */}
+          <div className="w-8 h-8 flex items-center justify-center md:hidden">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M5 7.5L10 12.5L15 7.5" stroke="#66C7FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
 
           {/* Step 2: 수거함에 버리기 */}
-          <div className="flex flex-col items-center py-8 px-4 gap-10 flex-1 rounded-[40px]">
+          <div className="flex flex-col items-center py-6 md:py-8 px-4 gap-6 md:gap-10 flex-1 rounded-[40px] w-full md:w-auto">
             {/* 이미지 */}
-            <div className="w-52 h-44 bg-white border border-slate-200 rounded-[32px] overflow-hidden flex items-center justify-center">
+            <div className="w-full max-w-[208px] h-44 bg-white border border-slate-200 rounded-[32px] overflow-hidden flex items-center justify-center">
               <img src="/수거함 2.png" alt="수거함에 버리기" className="w-full h-full object-cover" />
             </div>
 
@@ -78,16 +84,22 @@ export const Features = () => {
           </div>
 
           {/* Arrow Icon */}
-          <div className="w-8 h-8 flex items-center justify-center">
+          <div className="w-8 h-8 flex items-center justify-center md:block hidden">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M7.5 5L12.5 10L7.5 15" stroke="#66C7FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
+          {/* Mobile down arrow */}
+          <div className="w-8 h-8 flex items-center justify-center md:hidden">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M5 7.5L10 12.5L15 7.5" stroke="#66C7FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
 
           {/* Step 3: 주/야간 정기 수거 */}
-          <div className="flex flex-col items-center py-8 px-4 gap-10 flex-1 rounded-[40px]">
+          <div className="flex flex-col items-center py-6 md:py-8 px-4 gap-6 md:gap-10 flex-1 rounded-[40px] w-full md:w-auto">
             {/* 이미지 */}
-            <div className="w-52 h-44 bg-white border border-slate-200 rounded-[32px] overflow-hidden flex items-center justify-center">
+            <div className="w-full max-w-[208px] h-44 bg-white border border-slate-200 rounded-[32px] overflow-hidden flex items-center justify-center">
               <img src="/커버링트럭.png" alt="정기 수거" className="w-full h-full object-cover" />
             </div>
 

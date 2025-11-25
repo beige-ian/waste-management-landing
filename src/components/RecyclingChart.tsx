@@ -158,7 +158,7 @@ export const RecyclingChart = () => {
           </p>
           <h2 className="text-5xl sm:text-6xl font-bold text-slate-900 mb-6 leading-tight">
             국내 평균 27%<br />
-            <span style={{ color: '#1AA3FF' }}>커버링은 90% 이상</span>
+            <span style={{ color: '#1AA3FF' }}>커버링은 90%</span>
           </h2>
           <p className="text-xl text-slate-600 max-w-2xl mx-auto">
             자동화된 관리 시스템만으로도<br />

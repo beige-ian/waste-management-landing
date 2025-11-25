@@ -25,37 +25,22 @@ export const Navbar = () => {
         {/* 로고 */}
         <div className="flex items-center gap-3">
           <img src="/covering-logo.png" alt="커버링 로고" className="h-10 w-auto" />
-          <span
-            className={`hidden sm:block font-bold text-lg transition duration-300 ${
-              isScrolled ? 'text-slate-900' : 'text-white'
-            }`}
-          >
-            분리수거 관리
-          </span>
         </div>
 
         {/* 데스크톱 메뉴 */}
         <div className="hidden md:flex items-center gap-8">
-          <a
-            href="#features"
-            className={`transition duration-300 font-medium ${
-              isScrolled
-                ? 'text-slate-700 hover:text-emerald-600'
-                : 'text-white text-opacity-90 hover:text-opacity-100'
-            }`}
+          <button
+            onClick={() => {
+              const signupSection = document.getElementById('signup');
+              signupSection?.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="px-6 py-2 rounded-lg font-semibold text-white transition duration-300 transform hover:scale-105 shadow-lg"
+            style={{ backgroundColor: '#1AA3FF' }}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#1680CC')}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#1AA3FF')}
           >
-            기능
-          </a>
-          <a
-            href="#faq"
-            className={`transition duration-300 font-medium ${
-              isScrolled
-                ? 'text-slate-700 hover:text-emerald-600'
-                : 'text-white text-opacity-90 hover:text-opacity-100'
-            }`}
-          >
-            FAQ
-          </a>
+            1달 무료 체험하기
+          </button>
         </div>
 
 
@@ -89,29 +74,20 @@ export const Navbar = () => {
             isScrolled ? 'bg-white' : 'bg-slate-900'
           }`}
         >
-          <div className="max-w-6xl mx-auto px-4 py-4 space-y-3">
-            <a
-              href="#features"
-              className={`block py-2 font-medium transition duration-300 ${
-                isScrolled
-                  ? 'text-slate-700 hover:text-emerald-600'
-                  : 'text-white hover:text-emerald-300'
-              }`}
-              onClick={() => setIsMobileMenuOpen(false)}
+          <div className="max-w-6xl mx-auto px-4 py-4">
+            <button
+              onClick={() => {
+                const signupSection = document.getElementById('signup');
+                signupSection?.scrollIntoView({ behavior: 'smooth' });
+                setIsMobileMenuOpen(false);
+              }}
+              className="w-full px-6 py-3 rounded-lg font-semibold text-white transition duration-300 transform hover:scale-105 shadow-lg"
+              style={{ backgroundColor: '#1AA3FF' }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#1680CC')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#1AA3FF')}
             >
-              기능
-            </a>
-            <a
-              href="#faq"
-              className={`block py-2 font-medium transition duration-300 ${
-                isScrolled
-                  ? 'text-slate-700 hover:text-emerald-600'
-                  : 'text-white hover:text-emerald-300'
-              }`}
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              FAQ
-            </a>
+              1달 무료 체험하기
+            </button>
           </div>
         </div>
       )}

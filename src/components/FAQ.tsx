@@ -7,8 +7,8 @@ interface FAQItem {
 
 const faqData: FAQItem[] = [
   {
-    question: "어떤 용품을 버릴 수 있나요?",
-    answer: "대량배기물을 제외한 모든 배기물이 가능합니다.\n전반이 포함된 쓰레기는 가능합니다."
+    question: "수거가 안 되는 쓰레기가 있나요?",
+    answer: "대량 폐기물을 제외한 모든 폐기물 처리가 가능합니다."
   },
   {
     question: "이용 금액은 어떻게 되나요?",
@@ -16,7 +16,7 @@ const faqData: FAQItem[] = [
   },
   {
     question: "정산은 어떻게 진행되나요?",
-    answer: "매달 말 정산 요청을 드리면, 계좌 이체 요청 후 매달 제공해드린 발송을 배드라인 있습니다."
+    answer: "매월 말 정산 요청을 드리고 있으며, 계좌 이체 요청 후 세금계산서 발급을 해드리고 있습니다."
   },
   {
     question: "수거 빈도는 어떻게 되나요?",
@@ -28,7 +28,7 @@ const faqData: FAQItem[] = [
   },
   {
     question: "분리수거함은 제공이 되나요?",
-    answer: "기존 분리수거함이 있으신 경우 화가하여 활용하고 있으며, 무료 제공하는 신박(1년 이상 신청하면 자동 수 있습니다. 무료 제공하는 것들 더 좋은 설비를 원하실 경우, 추가 비용이 발생할 수 있습니다."
+    answer: "분리수거함이 있으신 경우 그대로 사용하실 수 있습니다. 커버링의 새로운 분리수거함으로 무료 교체 가능합니다."
   },
   {
     question: "서비스 지역이 어떻게 되나요?",
@@ -133,7 +133,7 @@ export const FAQ = () => {
             자주 묻는 질문
           </h2>
           <p className="text-lg text-slate-600 font-light max-w-2xl mx-auto opacity-0 animate-fade-in" style={{ animationDelay: '0.4s', animationFillMode: 'forwards' }}>
-            커버링 방문에 대해 사용자들이 궁금해 한 질문들을 모아보았어요.
+            커버링 빌딩에 대해 건물주분들이 궁금해 한 질문들을 모아보았어요.
           </p>
         </div>
 

@@ -130,7 +130,7 @@ export const SignupForm = () => {
               color: '#171719',
               margin: 0
             }}>
-              첫 달 무료체험 문의
+              견적 문의
             </h2>
             <p style={{
               fontFamily: 'Pretendard',
@@ -158,6 +158,45 @@ export const SignupForm = () => {
               문제가 발생했습니다: {error}
             </div>
           )}
+
+          {/* Promotion Banner */}
+          <div style={{
+            background: 'linear-gradient(135deg, #EAF2FE 0%, #D4E7FF 100%)',
+            border: '2px solid #3385FF',
+            borderRadius: '12px',
+            padding: '20px 24px',
+            marginBottom: '24px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px'
+          }}>
+            <div style={{
+              fontSize: '24px',
+              lineHeight: '1'
+            }}>🎁</div>
+            <div style={{ flex: 1 }}>
+              <p style={{
+                fontFamily: 'Pretendard',
+                fontWeight: 700,
+                fontSize: '18px',
+                lineHeight: '26px',
+                color: '#3385FF',
+                margin: '0 0 4px 0'
+              }}>
+                특별 혜택
+              </p>
+              <p style={{
+                fontFamily: 'Pretendard',
+                fontWeight: 600,
+                fontSize: '16px',
+                lineHeight: '24px',
+                color: '#46474C',
+                margin: 0
+              }}>
+                지금 계약하면 <span style={{ color: '#3385FF' }}>25만원 상당</span> 분리수거함을 제공해 드립니다
+              </p>
+            </div>
+          </div>
 
           {/* Form */}
           <form onSubmit={handleSubmit} style={{
@@ -319,7 +358,7 @@ export const SignupForm = () => {
                 onMouseEnter={(e) => !loading && (e.currentTarget.style.background = '#2874E6')}
                 onMouseLeave={(e) => !loading && (e.currentTarget.style.background = '#3385FF')}
               >
-                {loading ? '처리 중...' : '첫 달 무료체험 문의하기'}
+                {loading ? '처리 중...' : '견적 문의하기'}
               </button>
 
               {/* Privacy Notice */}

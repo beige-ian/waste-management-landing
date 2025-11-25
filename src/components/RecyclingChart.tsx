@@ -136,7 +136,7 @@ const DonutChart = ({ label, value, color, source, isHighlight }: DonutChartProp
 
 export const RecyclingChart = () => {
   return (
-    <section className="py-20 px-4 bg-gradient-to-b from-white to-blue-50 relative overflow-hidden">
+    <section className="py-20 px-4 bg-white relative overflow-hidden">
       <div className="max-w-6xl mx-auto">
         {/* 섹션 타이틀 */}
         <div className="text-center mb-20 animate-fade-in-up">

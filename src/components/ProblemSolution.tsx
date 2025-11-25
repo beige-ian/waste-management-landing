@@ -506,6 +506,21 @@ export const ProblemSolution = () => {
           </div>
         </div>
 
+        {/* 커버링 빌딩과 함께라면? 섹션 타이틀 */}
+        <div className="text-center mb-16 animate-fade-in-up">
+          <h2 style={{
+            fontSize: '48px',
+            letterSpacing: '-0.2px',
+            lineHeight: '62px',
+            fontWeight: 700,
+            fontFamily: 'Pretendard',
+            textAlign: 'center',
+            color: '#46474c',
+          }}>
+            커버링 빌딩과 함께라면?
+          </h2>
+        </div>
+
         {/* Figma 노드 5276-8625: 원스탑 서비스 */}
         <div className="mb-24 animate-fade-in-up">
           <div className="flex flex-col md:flex-row justify-between items-start p-6 sm:p-10 md:p-14 gap-8 md:gap-12 lg:gap-20 bg-white border border-slate-100 rounded-3xl md:rounded-[40px] w-full">

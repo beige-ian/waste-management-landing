@@ -120,19 +120,6 @@ const DonutChart = ({ label, value, color, source, isHighlight }: DonutChartProp
           >
             {animatedValue}%
           </text>
-          {value > animatedValue && (
-            <text
-              x="130"
-              y="165"
-              textAnchor="middle"
-              fontSize="16"
-              fontWeight="600"
-              fill={color}
-              opacity="0.7"
-            >
-              이상
-            </text>
-          )}
         </svg>
       </div>
 
@@ -153,9 +140,6 @@ export const RecyclingChart = () => {
       <div className="max-w-6xl mx-auto">
         {/* 섹션 타이틀 */}
         <div className="text-center mb-20 animate-fade-in-up">
-          <p className="text-base font-semibold tracking-wider uppercase mb-4" style={{ color: '#1AA3FF' }}>
-            재활용률의 현실
-          </p>
           <h2 className="text-5xl sm:text-6xl font-bold text-slate-900 mb-6 leading-tight">
             국내 평균 27%<br />
             <span style={{ color: '#1AA3FF' }}>커버링은 90%</span>

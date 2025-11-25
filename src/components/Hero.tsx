@@ -59,10 +59,10 @@ export const Hero = () => {
       backgroundAttachment: 'fixed'
     }}>
       {/* 배경 오버레이 - 텍스트 가독성 확보 */}
-      <div className="absolute inset-0 bg-black opacity-50 -z-10"></div>
+      <div className="absolute inset-0 bg-black opacity-60 z-0"></div>
 
       {/* 프라이머리 블루 그라데이션 오버레이 */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-transparent opacity-40 -z-10"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-transparent opacity-40 z-0"></div>
 
       <div className="max-w-6xl mx-auto flex items-center justify-between gap-12 relative z-10">
         {/* 왼쪽 텍스트 */}

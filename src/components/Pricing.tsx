@@ -12,9 +12,9 @@ export const Pricing = () => {
       price: '7,500',
       unit: '/회',
       note: '야간수거 기준',
-      caseTitle: '스타트업 A사 이용 사례',
+      caseTitle: '원룸 건물 이용 사례',
       features: [
-        { main: '10인 이내 사무실 또는 스타트업 추천', sub: null },
+        { main: '10세대 이하 원룸/투룸 건물 추천', sub: null },
         { main: '월 예산 60,000원 가량', sub: null },
         { main: '주 2회(월/금) 수거', sub: '수거 수/키트 수 자율 조정 가능' },
       ],
@@ -27,9 +27,9 @@ export const Pricing = () => {
       price: '12,000',
       unit: '/회',
       note: '야간수거 기준',
-      caseTitle: '기업 B사 이용 사례',
+      caseTitle: '다세대 건물 이용 사례',
       features: [
-        { main: '20인 이내 사무실 또는 기업 추천', sub: null },
+        { main: '20세대 이하 다세대 건물 추천', sub: null },
         { main: '월 예산 144,000원 가량', sub: null },
         { main: '주 3회(월/수/금) 수거', sub: '수거 수/키트 수 자율 조정 가능' },
       ],
@@ -42,10 +42,10 @@ export const Pricing = () => {
       price: '?',
       unit: '/회',
       note: '상담 시 견적 제공',
-      caseTitle: '기업 C사 이용 사례',
+      caseTitle: '대형 건물 이용 사례',
       features: [
-        { main: '30인 이상 사무실 또는 기업 추천', sub: null },
-        { main: '감이 잡히지 않는 경우 추천', sub: null },
+        { main: '30세대 이상 대형 건물 추천', sub: null },
+        { main: '세대 수 파악이 어려운 경우 추천', sub: null },
         { main: '수거 일 수 상담 후 조정', sub: '수거 수/키트 수 자율 조정 가능' },
       ],
       buttonText: '상담 신청하기',
@@ -60,10 +60,10 @@ export const Pricing = () => {
         {/* Header */}
         <div className="text-center mb-12">
           <p className="text-xl font-bold text-[#69a5ff] mb-1">
-            상황에 맞는 다양한 플랜
+            건물 규모에 맞는 다양한 플랜
           </p>
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
-            우리 사무실에 맞는 플랜은?
+            우리 건물에 맞는 플랜은?
           </h2>
         </div>
 

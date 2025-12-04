@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const slackWebhookUrl = process.env.VITE_SLACK_WEBHOOK_URL;
+  const slackWebhookUrl = process.env.SLACK_WEBHOOK_URL || process.env.VITE_SLACK_WEBHOOK_URL;
 
   if (!slackWebhookUrl) {
     return res.status(400).json({ error: 'Slack webhook URL not configured' });

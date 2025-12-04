@@ -43,13 +43,12 @@ export const References = () => {
           {partners.map((partner, index) => (
             <div
               key={index}
-              className="flex items-center justify-center h-16 px-2 grayscale hover:grayscale-0 transition-all duration-300"
-              style={{ mixBlendMode: 'darken' }}
+              className="flex items-center justify-center h-16 px-2 opacity-80 hover:opacity-100 transition-all duration-300"
             >
               <img
                 src={partner.logo}
                 alt={partner.name}
-                className="max-h-10 max-w-full object-contain"
+                className="max-h-12 max-w-full object-contain"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.style.display = 'none';
@@ -57,7 +56,7 @@ export const References = () => {
                   if (parent && !parent.querySelector('span')) {
                     const span = document.createElement('span');
                     span.textContent = partner.name;
-                    span.className = 'text-sm font-medium text-gray-500';
+                    span.className = 'text-sm font-semibold text-gray-700';
                     parent.appendChild(span);
                   }
                 }}

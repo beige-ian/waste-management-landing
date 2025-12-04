@@ -39,7 +39,7 @@ export const Navbar = () => {
             onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#1680CC')}
             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#1AA3FF')}
           >
-            1달 무료 체험하기
+            무료 상담 문의하기
           </button>
         </div>
 
@@ -86,7 +86,7 @@ export const Navbar = () => {
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#1680CC')}
               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#1AA3FF')}
             >
-              1달 무료 체험하기
+              무료 상담 문의하기
             </button>
           </div>
         </div>

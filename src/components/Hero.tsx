@@ -52,11 +52,8 @@ export const Hero = () => {
 
   return (
     <section className="text-white pt-32 pb-32 px-4 relative overflow-hidden mt-16 sm:mt-20 hero-section" ref={sectionRef}>
-      {/* 배경 오버레이 - 텍스트 가독성 확보 및 채도 낮추기 */}
-      <div className="absolute inset-0 bg-black opacity-90 -z-10"></div>
-
-      {/* 프라이머리 블루 그라데이션 오버레이 */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-transparent opacity-60 -z-10"></div>
+      {/* 배경 오버레이 - 텍스트 가독성 확보 */}
+      <div className="absolute inset-0 bg-black/60 z-0"></div>
 
       <div className="max-w-6xl mx-auto relative z-10">
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight" style={{ animationDelay: '0.2s' }}>
@@ -88,7 +85,7 @@ export const Hero = () => {
           onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#1680CC')}
           onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#1AA3FF')}
         >
-          1달 무료 체험하기
+          무료 상담 문의하기
         </button>
 
           {/* 신뢰도 */}

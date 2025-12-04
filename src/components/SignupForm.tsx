@@ -37,10 +37,8 @@ export const SignupForm = () => {
   };
 
   const sendSlackMessage = async () => {
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
-
     try {
-      const response = await fetch(`${apiUrl}/api/send-slack`, {
+      const response = await fetch('/api/send-slack', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -65,6 +65,12 @@ export const SignupForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!selectedCity) {
+      setError('지역을 선택해주세요.');
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -115,7 +121,7 @@ export const SignupForm = () => {
               문의 시 24시간 내 연락 예정
             </span>
             <h2 className="font-bold text-3xl md:text-[40px] leading-tight md:leading-[52px] tracking-tight text-[#171719] m-0">
-              첫 달 무료체험 문의
+              상담 문의
             </h2>
           </div>
           <p className="font-normal text-base leading-6 tracking-tight text-[#5A5C63] m-0 w-full md:w-[282px]">
@@ -220,7 +226,7 @@ export const SignupForm = () => {
                   : 'bg-[#23AFFF] cursor-pointer hover:bg-[#1A9EEB]'
               }`}
             >
-              {loading ? '처리 중...' : '첫 달 무료체험 문의하기'}
+              {loading ? '처리 중...' : '상담 문의하기'}
             </button>
           </form>
         </div>

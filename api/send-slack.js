@@ -30,13 +30,13 @@ export default async function handler(req, res) {
     const { city, phone, inquiry } = req.body;
 
     const slackMessage = {
-      text: '🎉 새로운 무료체험 문의가 들어왔습니다!',
+      text: '🎉 새로운 상담 문의가 들어왔습니다!',
       blocks: [
         {
           type: 'header',
           text: {
             type: 'plain_text',
-            text: '🎉 첫 달 무료체험 문의',
+            text: '🎉 상담 문의',
           },
         },
         {

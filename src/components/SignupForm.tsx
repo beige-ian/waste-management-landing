@@ -65,6 +65,12 @@ export const SignupForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!selectedCity) {
+      setError('지역을 선택해주세요.');
+      return;
+    }
+
     setLoading(true);
     setError(null);
 

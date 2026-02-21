@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAllBookings, updateBooking } from "@/lib/db";
+import { getAllBookings, updateBooking, getDrivers } from "@/lib/db";
 import { validateToken, getAdminFromToken } from "@/app/api/admin/auth/route";
 import { supabase } from "@/lib/supabase";
 import { hasPermission } from "@/lib/admin-roles";
@@ -114,6 +114,25 @@ export async function PUT(
         { error: "예약을 찾을 수 없습니다" },
         { status: 404 },
       );
+    }
+
+    // 기사 배차 시 휴무일 검증
+    if (body.driverId) {
+      const drivers = await getDrivers(false);
+      const driver = drivers.find((d) => d.id === body.driverId);
+      if (driver?.workDays && driver.workDays.length > 0) {
+        const bookingDay = new Date(existing.date + "T00:00:00Z").getUTCDay();
+        if (!driver.workDays.includes(bookingDay)) {
+          const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
+          return NextResponse.json(
+            {
+              error: `${driver.name} 기사님의 휴무일입니다 (${dayNames[bookingDay]}요일)`,
+              code: "DRIVER_OFF_DAY",
+            },
+            { status: 422 },
+          );
+        }
+      }
     }
 
     const previousStatus = existing.status;

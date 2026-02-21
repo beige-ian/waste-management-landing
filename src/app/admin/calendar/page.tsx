@@ -24,6 +24,7 @@ interface Driver {
   phone: string | null;
   active: boolean;
   createdAt: string;
+  workDays: number[] | null; // 0=일,1=월,...,6=토. null=제한없음
 }
 
 /* ── 상수 ── */
@@ -436,6 +437,28 @@ export default function AdminCalendarPage() {
       }
     } catch {
       alert("네트워크 오류");
+    }
+  }
+
+  async function handleUpdateWorkDays(driver: Driver, day: number) {
+    const current = driver.workDays ?? [0, 1, 2, 3, 4, 5, 6];
+    const next = current.includes(day)
+      ? current.filter((d) => d !== day)
+      : [...current, day].sort((a, b) => a - b);
+    try {
+      const res = await fetch("/api/admin/drivers", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ id: driver.id, workDays: next }),
+      });
+      if (res.ok) {
+        fetchDrivers();
+      }
+    } catch {
+      // ignore
     }
   }
 
@@ -1071,7 +1094,11 @@ export default function AdminCalendarPage() {
                               {driverSaving ? "..." : "저장"}
                             </button>
                             <button
-                              onClick={() => setEditingDriverId(null)}
+                              onClick={() => {
+                                setEditingDriverId(null);
+                                setEditDriverName("");
+                                setEditDriverPhone("");
+                              }}
                               className="flex-1 h-9 rounded-sm bg-bg-warm text-text-sub text-xs font-medium border border-border-light active:scale-[0.98] transition-all"
                             >
                               취소
@@ -1080,46 +1107,71 @@ export default function AdminCalendarPage() {
                         </div>
                       ) : (
                         /* 보기 모드 */
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2 min-w-0">
-                            <span className={`w-2 h-2 rounded-full shrink-0 ${
-                              driver.active ? "bg-semantic-green" : "bg-text-muted"
-                            }`} />
-                            <span className="text-sm font-medium text-text-primary truncate">
-                              {driver.name}
-                            </span>
-                            {driver.phone && (
-                              <span className="text-[11px] text-text-muted shrink-0">
-                                {driver.phone}
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2 min-w-0">
+                              <span className={`w-2 h-2 rounded-full shrink-0 ${
+                                driver.active ? "bg-semantic-green" : "bg-text-muted"
+                              }`} />
+                              <span className="text-sm font-medium text-text-primary truncate">
+                                {driver.name}
                               </span>
-                            )}
-                            {!driver.active && (
-                              <span className="text-[10px] font-medium text-text-muted bg-fill-tint px-1.5 py-0.5 rounded shrink-0">
-                                비활성
-                              </span>
-                            )}
+                              {driver.phone && (
+                                <span className="text-[11px] text-text-muted shrink-0">
+                                  {driver.phone}
+                                </span>
+                              )}
+                              {!driver.active && (
+                                <span className="text-[10px] font-medium text-text-muted bg-fill-tint px-1.5 py-0.5 rounded shrink-0">
+                                  비활성
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                              <button
+                                onClick={() => {
+                                  setEditingDriverId(driver.id);
+                                  setEditDriverName(driver.name);
+                                  setEditDriverPhone(driver.phone || "");
+                                }}
+                                disabled={!!editingDriverId}
+                                className="text-[11px] font-medium text-text-sub hover:text-text-primary px-2 py-1.5 rounded-sm hover:bg-bg-warm transition-colors disabled:opacity-40 disabled:pointer-events-none"
+                              >
+                                수정
+                              </button>
+                              <button
+                                onClick={() => handleToggleDriverActive(driver)}
+                                disabled={!!editingDriverId}
+                                className={`text-[11px] font-medium px-2 py-1.5 rounded-sm transition-colors disabled:opacity-40 disabled:pointer-events-none ${
+                                  driver.active
+                                    ? "text-semantic-red hover:bg-red-50"
+                                    : "text-semantic-green hover:bg-green-50"
+                                }`}
+                              >
+                                {driver.active ? "비활성화" : "활성화"}
+                              </button>
+                            </div>
                           </div>
-                          <div className="flex items-center gap-1.5 shrink-0 ml-2">
-                            <button
-                              onClick={() => {
-                                setEditingDriverId(driver.id);
-                                setEditDriverName(driver.name);
-                                setEditDriverPhone(driver.phone || "");
-                              }}
-                              className="text-[11px] font-medium text-text-sub hover:text-text-primary px-2 py-1.5 rounded-sm hover:bg-bg-warm transition-colors"
-                            >
-                              수정
-                            </button>
-                            <button
-                              onClick={() => handleToggleDriverActive(driver)}
-                              className={`text-[11px] font-medium px-2 py-1.5 rounded-sm transition-colors ${
-                                driver.active
-                                  ? "text-semantic-red hover:bg-red-50"
-                                  : "text-semantic-green hover:bg-green-50"
-                              }`}
-                            >
-                              {driver.active ? "비활성화" : "활성화"}
-                            </button>
+                          {/* 근무요일 토글 */}
+                          <div className="flex items-center gap-1">
+                            {["일","월","화","수","목","금","토"].map((label, idx) => {
+                              const activeDays = driver.workDays ?? [0,1,2,3,4,5,6];
+                              const isWorkDay = activeDays.includes(idx);
+                              return (
+                                <button
+                                  key={idx}
+                                  onClick={() => handleUpdateWorkDays(driver, idx)}
+                                  disabled={!!editingDriverId}
+                                  className={`w-7 h-7 rounded-full text-[11px] font-medium transition-colors disabled:pointer-events-none ${
+                                    isWorkDay
+                                      ? "bg-primary text-white"
+                                      : "bg-fill-tint text-text-muted"
+                                  }`}
+                                >
+                                  {label}
+                                </button>
+                              );
+                            })}
                           </div>
                         </div>
                       )}

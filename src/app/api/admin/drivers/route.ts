@@ -77,10 +77,11 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    const updates: { name?: string; phone?: string; active?: boolean } = {};
+    const updates: { name?: string; phone?: string; active?: boolean; workDays?: number[] | null } = {};
     if (body.name !== undefined) updates.name = body.name;
     if (body.phone !== undefined) updates.phone = body.phone;
     if (body.active !== undefined) updates.active = body.active;
+    if (body.workDays !== undefined) updates.workDays = body.workDays;
 
     const driver = await updateDriver(body.id, updates);
     if (!driver) {

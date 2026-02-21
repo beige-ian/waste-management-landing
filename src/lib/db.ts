@@ -18,6 +18,7 @@ export interface Driver {
   phone: string | null;
   active: boolean;
   createdAt: string;
+  workDays: number[] | null; // 0=일,1=월,...,6=토. null=제한없음
 }
 
 /* ── camelCase ↔ snake_case 매핑 ── */
@@ -390,6 +391,7 @@ function rowToDriver(row: Record<string, unknown>): Driver {
     phone: (row.phone as string) || null,
     active: row.active as boolean,
     createdAt: row.created_at as string,
+    workDays: Array.isArray(row.work_days) ? (row.work_days as number[]) : null,
   };
 }
 
@@ -422,12 +424,13 @@ export async function createDriver(name: string, phone?: string): Promise<Driver
 
 export async function updateDriver(
   id: string,
-  updates: { name?: string; phone?: string; active?: boolean },
+  updates: { name?: string; phone?: string; active?: boolean; workDays?: number[] | null },
 ): Promise<Driver | null> {
   const row: Record<string, unknown> = {};
   if (updates.name !== undefined) row.name = updates.name;
   if (updates.phone !== undefined) row.phone = updates.phone;
   if (updates.active !== undefined) row.active = updates.active;
+  if (updates.workDays !== undefined) row.work_days = updates.workDays;
 
   const { data, error } = await supabase
     .from("drivers")

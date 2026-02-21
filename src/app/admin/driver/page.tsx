@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import type { Booking } from "@/types/booking";
@@ -29,42 +29,25 @@ const QUICK_ACTIONS: Record<string, { status: string; label: string; color: stri
   in_progress: { status: "completed", label: "수거 완료", color: "bg-semantic-green text-white" },
 };
 
+// epoch ms 기반 KST 날짜 계산
 function getToday(): string {
-  const now = new Date();
-  now.setHours(now.getHours() + 9);
-  return now.toISOString().slice(0, 10);
+  return new Date(Date.now() + 9 * 3_600_000).toISOString().slice(0, 10);
 }
 
 function getTomorrow(): string {
-  const now = new Date();
-  now.setHours(now.getHours() + 9);
-  now.setDate(now.getDate() + 1);
-  return now.toISOString().slice(0, 10);
+  return new Date(Date.now() + 9 * 3_600_000 + 86_400_000).toISOString().slice(0, 10);
 }
 
 function formatDateShort(dateStr: string): string {
-  const d = new Date(dateStr + "T00:00:00");
+  const [y, m, d] = dateStr.split("-").map(Number);
+  const ms = Date.UTC(y, m - 1, d);
   const weekdays = ["일", "월", "화", "수", "목", "금", "토"];
-  return `${d.getMonth() + 1}/${d.getDate()} (${weekdays[d.getDay()]})`;
+  return `${m}/${d} (${weekdays[new Date(ms).getUTCDay()]})`;
 }
 
 function openMap(address: string) {
   const encoded = encodeURIComponent(address);
-  // 네이버 지도 앱 딥링크 → fallback: 카카오맵 웹
-  const naverUrl = `nmap://search?query=${encoded}&appname=com.covering.spot`;
-  const kakaoFallback = `https://map.kakao.com/?q=${encoded}`;
-
-  const timeout = setTimeout(() => {
-    window.location.href = kakaoFallback;
-  }, 1500);
-
-  window.location.href = naverUrl;
-
-  window.addEventListener(
-    "blur",
-    () => clearTimeout(timeout),
-    { once: true },
-  );
+  window.open(`https://map.kakao.com/?q=${encoded}`, "_blank");
 }
 
 export default function AdminDriverPage() {
@@ -75,6 +58,24 @@ export default function AdminDriverPage() {
   const [activeTab, setActiveTab] = useState("all");
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [showDate, setShowDate] = useState<"today" | "tomorrow">("today");
+
+  // 인라인 확인 상태
+  const [confirmAction, setConfirmAction] = useState<{
+    bookingId: string;
+    customerName: string;
+    newStatus: string;
+    label: string;
+  } | null>(null);
+
+  // 토스트 상태
+  const [toast, setToast] = useState<string | null>(null);
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function showToast(msg: string) {
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+    setToast(msg);
+    toastTimer.current = setTimeout(() => setToast(null), 3000);
+  }
 
   useEffect(() => {
     const t = sessionStorage.getItem("admin_token");
@@ -144,12 +145,22 @@ export default function AdminDriverPage() {
     return counts;
   }, [bookings, targetDate]);
 
-  async function handleQuickAction(booking: Booking, newStatus: string, label: string) {
-    if (!confirm(`"${booking.customerName}" 건을 "${label}"(으)로 변경할까요?`)) return;
+  function requestQuickAction(booking: Booking, newStatus: string, label: string) {
+    setConfirmAction({
+      bookingId: booking.id,
+      customerName: booking.customerName,
+      newStatus,
+      label,
+    });
+  }
 
-    setActionLoading(booking.id);
+  async function executeQuickAction() {
+    if (!confirmAction) return;
+    const { bookingId, newStatus } = confirmAction;
+    setConfirmAction(null);
+    setActionLoading(bookingId);
     try {
-      const res = await fetch(`/api/admin/bookings/${booking.id}`, {
+      const res = await fetch(`/api/admin/bookings/${bookingId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -161,10 +172,10 @@ export default function AdminDriverPage() {
         fetchBookings();
       } else {
         const data = await res.json();
-        alert(data.error || "변경 실패");
+        showToast(data.error || "변경 실패");
       }
     } catch {
-      alert("네트워크 오류");
+      showToast("네트워크 오류가 발생했습니다");
     } finally {
       setActionLoading(null);
     }
@@ -175,6 +186,42 @@ export default function AdminDriverPage() {
 
   return (
     <div className="min-h-screen bg-bg-warm">
+      {/* 토스트 */}
+      {toast && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-text-primary text-white text-sm px-4 py-2.5 rounded-lg shadow-lg animate-fade-in">
+          {toast}
+        </div>
+      )}
+
+      {/* 인라인 확인 다이얼로그 */}
+      {confirmAction && (
+        <div className="fixed inset-0 z-40 flex items-end sm:items-center justify-center bg-black/40 px-4 pb-4 sm:pb-0">
+          <div className="w-full max-w-sm bg-bg rounded-xl shadow-xl p-5">
+            <p className="text-sm font-medium text-text-primary mb-1">
+              상태 변경
+            </p>
+            <p className="text-sm text-text-sub mb-4">
+              <span className="font-semibold text-text-primary">{confirmAction.customerName}</span> 건을{" "}
+              <span className="font-semibold text-primary">{confirmAction.label}</span>(으)로 변경할까요?
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setConfirmAction(null)}
+                className="flex-1 h-10 rounded-lg border border-border-light text-sm font-medium text-text-sub hover:bg-bg-warm transition-colors"
+              >
+                취소
+              </button>
+              <button
+                onClick={executeQuickAction}
+                className="flex-1 h-10 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary-dark active:scale-[0.98] transition-all"
+              >
+                확인
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* 헤더 */}
       <div className="sticky top-0 z-10 bg-bg/80 backdrop-blur-[20px] border-b border-border-light">
         <div className="max-w-[42rem] mx-auto px-4 py-3 flex items-center justify-between">
@@ -377,7 +424,7 @@ export default function AdminDriverPage() {
                   {quickAction && (
                     <div className="px-4 pb-3">
                       <button
-                        onClick={() => handleQuickAction(b, quickAction.status, quickAction.label)}
+                        onClick={() => requestQuickAction(b, quickAction.status, quickAction.label)}
                         disabled={isLoading}
                         className={`w-full py-2.5 rounded-md text-sm font-semibold transition-all duration-200 ${quickAction.color} ${
                           isLoading ? "opacity-50" : "active:scale-[0.98]"

@@ -9,6 +9,8 @@ import { TextArea } from "@/components/ui/TextArea";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { formatPhoneNumber, formatPrice, formatManWon } from "@/lib/format";
 import { track } from "@/lib/analytics";
+import { getEarliestBookableDate } from "@/lib/booking-utils";
+import { SPOT_CATEGORIES } from "@/data/spot-items";
 
 /** 수정 가능 여부: pending 상태 + 수거일 전날 22시 이전 */
 function canEdit(b: Booking): boolean {
@@ -70,6 +72,14 @@ const TIME_SLOTS = [
   "종일 가능",
 ];
 
+interface EditItem {
+  name: string;
+  displayName: string;
+  category: string;
+  price: number;
+  quantity: number;
+}
+
 interface EditForm {
   date: string;
   timeSlot: string;
@@ -77,6 +87,8 @@ interface EditForm {
   hasElevator: boolean;
   hasParking: boolean;
   memo: string;
+  items: EditItem[];
+  photos: string[];
 }
 
 export default function BookingManagePage() {
@@ -94,6 +106,8 @@ export default function BookingManagePage() {
   const [rescheduleSaving, setRescheduleSaving] = useState(false);
   const [availableSlots, setAvailableSlots] = useState<{ time: string; available: boolean }[]>([]);
   const [slotsLoading, setSlotsLoading] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>(SPOT_CATEGORIES[0].name);
+  const [photoUploading, setPhotoUploading] = useState(false);
 
   // 신청 관리 페이지 트래킹
   useEffect(() => {
@@ -154,6 +168,7 @@ export default function BookingManagePage() {
 
   function startEdit(b: Booking) {
     setEditingId(b.id);
+    setSelectedCategory(SPOT_CATEGORIES[0].name);
     setEditForm({
       date: b.date,
       timeSlot: b.timeSlot,
@@ -161,6 +176,8 @@ export default function BookingManagePage() {
       hasElevator: b.hasElevator,
       hasParking: b.hasParking,
       memo: b.memo,
+      items: b.items.map((item) => ({ ...item })),
+      photos: b.photos ? [...b.photos] : [],
     });
   }
 
@@ -197,6 +214,57 @@ export default function BookingManagePage() {
     } finally {
       setSaving(false);
     }
+  }
+
+  function updateItemQuantity(itemName: string, category: string, delta: number) {
+    if (!editForm) return;
+    const existing = editForm.items.find((i) => i.name === itemName && i.category === category);
+    if (existing) {
+      const newQty = existing.quantity + delta;
+      if (newQty <= 0) {
+        setEditForm({ ...editForm, items: editForm.items.filter((i) => !(i.name === itemName && i.category === category)) });
+      } else {
+        setEditForm({ ...editForm, items: editForm.items.map((i) => i.name === itemName && i.category === category ? { ...i, quantity: newQty } : i) });
+      }
+    } else if (delta > 0) {
+      const cat = SPOT_CATEGORIES.find((c) => c.name === category);
+      const spotItem = cat?.items.find((i) => i.name === itemName);
+      if (spotItem) {
+        setEditForm({ ...editForm, items: [...editForm.items, { ...spotItem, quantity: 1 }] });
+      }
+    }
+  }
+
+  async function handlePhotoUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    if (!editForm || !e.target.files || e.target.files.length === 0) return;
+    const files = Array.from(e.target.files);
+    if (editForm.photos.length + files.length > 10) {
+      alert("사진은 최대 10장까지 첨부할 수 있습니다");
+      return;
+    }
+    setPhotoUploading(true);
+    try {
+      const formData = new FormData();
+      files.forEach((f) => formData.append("photos", f));
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      if (!res.ok) {
+        const err = await res.json();
+        alert(err.error || "업로드 실패");
+        return;
+      }
+      const data = await res.json();
+      setEditForm({ ...editForm, photos: [...editForm.photos, ...data.urls] });
+    } catch {
+      alert("업로드 중 오류가 발생했습니다");
+    } finally {
+      setPhotoUploading(false);
+      e.target.value = "";
+    }
+  }
+
+  function removePhoto(url: string) {
+    if (!editForm) return;
+    setEditForm({ ...editForm, photos: editForm.photos.filter((p) => p !== url) });
   }
 
   async function fetchSlots(date: string, excludeId: string) {
@@ -251,8 +319,7 @@ export default function BookingManagePage() {
     }
   }
 
-  // 오늘 날짜 (date input min 값용)
-  const today = new Date().toISOString().split("T")[0];
+  const earliestDate = getEarliestBookableDate();
 
   return (
     <div className="space-y-6">
@@ -354,7 +421,7 @@ export default function BookingManagePage() {
                           </label>
                           <input
                             type="date"
-                            min={today}
+                            min={earliestDate}
                             value={editForm.date}
                             onChange={(e) => setEditForm({ ...editForm, date: e.target.value })}
                             className="w-full h-12 px-4 border border-border rounded-md text-base text-text-primary bg-bg transition-all duration-200 outline-none focus:border-brand-400 focus:ring-1 focus:ring-brand-400 appearance-none"
@@ -399,6 +466,78 @@ export default function BookingManagePage() {
                             label="주차 가능"
                           />
                         </div>
+
+                        {/* 품목 수정 */}
+                        <div>
+                          <label className="block text-sm font-semibold text-text-primary mb-2">품목</label>
+                          {/* 현재 선택된 품목 */}
+                          {editForm.items.length > 0 && (
+                            <div className="mb-3 space-y-1.5">
+                              {editForm.items.map((item) => (
+                                <div key={`${item.category}-${item.name}`} className="flex items-center justify-between bg-bg-warm rounded-md px-3 py-2">
+                                  <span className="text-xs text-text-sub truncate max-w-[55%]">{item.category} - {item.name}</span>
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-xs text-text-muted">{formatPrice(item.price * item.quantity)}원</span>
+                                    <button type="button" onClick={() => updateItemQuantity(item.name, item.category, -1)} className="w-6 h-6 rounded bg-fill-tint text-text-sub font-bold text-sm flex items-center justify-center hover:bg-semantic-red-tint hover:text-semantic-red">−</button>
+                                    <span className="text-sm font-semibold w-5 text-center">{item.quantity}</span>
+                                    <button type="button" onClick={() => updateItemQuantity(item.name, item.category, 1)} className="w-6 h-6 rounded bg-fill-tint text-text-sub font-bold text-sm flex items-center justify-center hover:bg-primary-tint hover:text-primary">+</button>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          {/* 카테고리 탭 */}
+                          <div className="flex gap-1.5 flex-wrap mb-2">
+                            {SPOT_CATEGORIES.map((cat) => (
+                              <button key={cat.name} type="button" onClick={() => setSelectedCategory(cat.name)} className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${selectedCategory === cat.name ? "bg-primary text-white" : "bg-bg-warm text-text-sub hover:bg-primary-tint"}`}>
+                                {cat.name}
+                              </button>
+                            ))}
+                          </div>
+                          {/* 선택한 카테고리 품목 목록 */}
+                          <div className="space-y-1">
+                            {SPOT_CATEGORIES.find((c) => c.name === selectedCategory)?.items.map((spotItem) => {
+                              const qty = editForm.items.find((i) => i.name === spotItem.name && i.category === spotItem.category)?.quantity ?? 0;
+                              return (
+                                <div key={spotItem.name} className="flex items-center justify-between py-1.5 px-2 rounded hover:bg-bg-warm">
+                                  <div>
+                                    <span className="text-xs text-text-primary">{spotItem.name}</span>
+                                    <span className="ml-2 text-xs text-text-muted">{formatPrice(spotItem.price)}원</span>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <button type="button" onClick={() => updateItemQuantity(spotItem.name, spotItem.category, -1)} disabled={qty === 0} className="w-6 h-6 rounded bg-fill-tint text-text-sub font-bold text-sm flex items-center justify-center hover:bg-semantic-red-tint hover:text-semantic-red disabled:opacity-30 disabled:cursor-not-allowed">−</button>
+                                    <span className="text-sm font-semibold w-5 text-center">{qty}</span>
+                                    <button type="button" onClick={() => updateItemQuantity(spotItem.name, spotItem.category, 1)} className="w-6 h-6 rounded bg-fill-tint text-text-sub font-bold text-sm flex items-center justify-center hover:bg-primary-tint hover:text-primary">+</button>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+
+                        {/* 사진 추가/삭제 */}
+                        <div>
+                          <label className="block text-sm font-semibold text-text-primary mb-2">
+                            사진 <span className="text-text-muted font-normal">({editForm.photos.length}/10)</span>
+                          </label>
+                          {editForm.photos.length > 0 && (
+                            <div className="grid grid-cols-3 gap-2 mb-2">
+                              {editForm.photos.map((url) => (
+                                <div key={url} className="relative aspect-square rounded-md overflow-hidden bg-bg-warm">
+                                  <img src={url} alt="첨부 사진" className="w-full h-full object-cover" />
+                                  <button type="button" onClick={() => removePhoto(url)} className="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/60 text-white text-xs flex items-center justify-center hover:bg-semantic-red">✕</button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          {editForm.photos.length < 10 && (
+                            <label className={`flex items-center gap-2 px-4 py-3 rounded-md border border-dashed border-border text-sm text-text-sub cursor-pointer hover:bg-bg-warm transition-colors ${photoUploading ? "opacity-50 pointer-events-none" : ""}`}>
+                              <span>{photoUploading ? "업로드 중..." : "📷 사진 추가"}</span>
+                              <input type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" multiple className="hidden" onChange={handlePhotoUpload} disabled={photoUploading} />
+                            </label>
+                          )}
+                        </div>
+
                         <TextArea
                           label="요청사항"
                           value={editForm.memo}
@@ -412,7 +551,7 @@ export default function BookingManagePage() {
                             size="md"
                             fullWidth
                             onClick={() => handleSave(b.id)}
-                            disabled={saving}
+                            disabled={saving || editForm.items.length === 0}
                             loading={saving}
                           >
                             저장
@@ -484,9 +623,15 @@ export default function BookingManagePage() {
                         )}
 
                         {b.photos && b.photos.length > 0 && (
-                          <div className="flex justify-between py-2.5 border-b border-border-light">
-                            <span className="text-text-sub">첨부 사진</span>
-                            <span className="font-medium">{b.photos.length}장</span>
+                          <div className="py-2.5 border-b border-border-light">
+                            <span className="text-text-sub">첨부 사진 ({b.photos.length}장)</span>
+                            <div className="grid grid-cols-3 gap-2 mt-2">
+                              {b.photos.map((url) => (
+                                <a key={url} href={url} target="_blank" rel="noopener noreferrer" className="aspect-square rounded-md overflow-hidden bg-bg-warm block">
+                                  <img src={url} alt="첨부 사진" className="w-full h-full object-cover" />
+                                </a>
+                              ))}
+                            </div>
                           </div>
                         )}
 
@@ -522,7 +667,7 @@ export default function BookingManagePage() {
                               </label>
                               <input
                                 type="date"
-                                min={today}
+                                min={earliestDate}
                                 value={rescheduleForm.date}
                                 onChange={(e) => {
                                   const newDate = e.target.value;

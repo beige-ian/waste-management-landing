@@ -10,6 +10,7 @@ import {
   sendBookingDeleted,
 } from "@/lib/slack-notify";
 import { validateBookingToken } from "@/lib/booking-token";
+import { calculateQuote } from "@/lib/quote-calculator";
 
 /** 고객이 수정 가능한 필드만 허용 (admin 전용 필드 차단) */
 const CustomerUpdateSchema = z.object({
@@ -26,6 +27,8 @@ const CustomerUpdateSchema = z.object({
   photos: z.array(z.string().url()).optional(),
   address: z.string().optional(),
   addressDetail: z.string().max(200).optional(),
+  hasElevator: z.boolean().optional(),
+  hasParking: z.boolean().optional(),
   needLadder: z.boolean().optional(),
   ladderType: z.string().optional(),
   ladderHours: z.number().int().min(1).max(8).optional(),
@@ -136,7 +139,24 @@ export async function PUT(
         { status: 400 },
       );
     }
-    const updated = await updateBooking(id, parsed.data);
+
+    // items 변경 시 견적 자동 재계산
+    const updateData: Record<string, unknown> = { ...parsed.data };
+    if (parsed.data.items) {
+      const quote = calculateQuote({
+        area: existing.area,
+        items: parsed.data.items,
+        needLadder: existing.needLadder,
+        ladderType: existing.ladderType ?? undefined,
+        ladderHours: existing.ladderHours ?? undefined,
+      });
+      updateData.totalPrice = quote.totalPrice;
+      updateData.crewSize = quote.crewSize;
+      updateData.estimateMin = quote.estimateMin;
+      updateData.estimateMax = quote.estimateMax;
+    }
+
+    const updated = await updateBooking(id, updateData);
     if (!updated) {
       return NextResponse.json(
         { error: "수정 실패" },

@@ -52,8 +52,8 @@ interface EventProps {
   booking_manage_view: Record<string, never>;
   booking_cancel: { bookingId: string; reason?: string };
   quote_preview: { itemCount: number; total: number };
-  referral_bridge_view: { code: string; name?: string };
-  referral_bridge_cta: { cta_type: "copy_code" | "app_download"; code: string };
+  referral_bridge_view: { code: string; name?: string; channel?: string };
+  referral_bridge_cta: { cta_type: "copy_code" | "app_download" | "kakao_share"; code: string };
 }
 
 declare global {
@@ -67,6 +67,13 @@ declare global {
       events: { send: (event: string, data?: object) => void };
     };
     gtag?: (...args: unknown[]) => void;
+    Kakao?: {
+      init: (appKey: string) => void;
+      isInitialized: () => boolean;
+      Share: {
+        sendDefault: (settings: object) => void;
+      };
+    };
   }
 }
 

@@ -2,13 +2,22 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState, useCallback, Suspense } from "react";
+import Script from "next/script";
 import { track } from "@/lib/analytics";
+import { KakaoIcon } from "@/components/ui/KakaoIcon";
 
 /* 에어브릿지 대시보드에서 트래킹 링크 생성 후 교체 */
 const AIRBRIDGE_DOWNLOAD_URL = "https://abr.ge/coveringprod";
+const KAKAO_JS_KEY = process.env.NEXT_PUBLIC_KAKAO_JS_KEY;
+const BRIDGE_BASE_URL = "https://waste-management-landing-rose.vercel.app/bridge/invite";
 
 function buildDownloadUrl(code: string) {
   return `${AIRBRIDGE_DOWNLOAD_URL}?referral_code=${encodeURIComponent(code)}&channel=referral_bridge`;
+}
+
+function buildShareUrl(code: string, name: string) {
+  const params = new URLSearchParams({ code, ...(name ? { name } : {}), channel: "kakao_share" });
+  return `${BRIDGE_BASE_URL}?${params.toString()}`;
 }
 
 function GiftIcon() {
@@ -36,8 +45,10 @@ function InviteBridgeContent() {
   const searchParams = useSearchParams();
   const code = searchParams.get("code") || "";
   const name = searchParams.get("name") || "";
+  const channel = searchParams.get("channel") || "";
   const [copied, setCopied] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [kakaoReady, setKakaoReady] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
@@ -47,9 +58,34 @@ function InviteBridgeContent() {
 
   useEffect(() => {
     if (code) {
-      track("referral_bridge_view", { code, name: name || undefined });
+      track("referral_bridge_view", { code, name: name || undefined, channel: channel || undefined });
     }
-  }, [code, name]);
+  }, [code, name, channel]);
+
+  const handleKakaoLoad = useCallback(() => {
+    if (typeof window !== "undefined" && window.Kakao && KAKAO_JS_KEY) {
+      if (!window.Kakao.isInitialized()) {
+        window.Kakao.init(KAKAO_JS_KEY);
+      }
+      setKakaoReady(true);
+    }
+  }, []);
+
+  const handleKakaoShare = useCallback(() => {
+    if (!code || !window.Kakao?.Share) return;
+    const shareUrl = buildShareUrl(code, name);
+    window.Kakao.Share.sendDefault({
+      objectType: "feed",
+      content: {
+        title: `${displayName}님이 보낸 집정리 3만원 지원금`,
+        description: "커버링 앱 첫 수거 시 3만원 할인",
+        imageUrl: `${BRIDGE_BASE_URL.replace("/bridge/invite", "")}/images/logo.png`,
+        link: { mobileWebUrl: shareUrl, webUrl: shareUrl },
+      },
+      buttons: [{ title: "할인받으러 가기", link: { mobileWebUrl: shareUrl, webUrl: shareUrl } }],
+    });
+    track("referral_bridge_cta", { cta_type: "kakao_share", code });
+  }, [code, name, displayName]);
 
   const handleCopyCode = useCallback(async () => {
     if (!code) return;
@@ -79,6 +115,14 @@ function InviteBridgeContent() {
 
   return (
     <div className="min-h-dvh bg-[#EEF2F6] flex items-center justify-center px-4 py-10">
+      {KAKAO_JS_KEY && (
+        <Script
+          src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js"
+          integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4"
+          crossOrigin="anonymous"
+          onLoad={handleKakaoLoad}
+        />
+      )}
       <div className="w-full max-w-[360px] rounded-[32px] bg-white overflow-hidden">
         {/* [A] Hero */}
         <div className={fadeIn("")}>
@@ -141,7 +185,7 @@ function InviteBridgeContent() {
         )}
 
         {/* [D] CTA */}
-        <div className={`${fadeIn("delay-300")} px-5 pb-6`}>
+        <div className={`${fadeIn("delay-300")} px-5 ${kakaoReady && code ? "pb-3" : "pb-6"}`}>
           <a
             href={code ? buildDownloadUrl(code) : AIRBRIDGE_DOWNLOAD_URL}
             onClick={handleDownload}
@@ -150,6 +194,20 @@ function InviteBridgeContent() {
             앱 다운로드하고 할인받기
           </a>
         </div>
+
+        {/* [D-2] Kakao Share */}
+        {kakaoReady && code && (
+          <div className={`${fadeIn("delay-350")} px-5 pb-6`}>
+            <button
+              type="button"
+              onClick={handleKakaoShare}
+              className="flex items-center justify-center gap-2 w-full bg-[#FEE500] text-[#191919] rounded-2xl py-4 text-[16px] font-bold active:scale-[0.97] transition-transform duration-150"
+            >
+              <KakaoIcon size={20} />
+              카카오톡으로 공유하기
+            </button>
+          </div>
+        )}
 
         {/* [E] Footer */}
         <div className={`${fadeIn("delay-400")} pb-5 text-center`}>

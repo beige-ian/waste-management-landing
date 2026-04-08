@@ -14,12 +14,12 @@ function buildDownloadUrl(code: string) {
 function GiftIcon() {
   return (
     <svg
-      width="40"
-      height="40"
+      width="48"
+      height="48"
       viewBox="0 0 24 24"
       fill="none"
       stroke="white"
-      strokeWidth="2"
+      strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
     >
@@ -37,6 +37,11 @@ function InviteBridgeContent() {
   const code = searchParams.get("code") || "";
   const name = searchParams.get("name") || "";
   const [copied, setCopied] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const displayName = name || "친구";
 
@@ -53,6 +58,8 @@ function InviteBridgeContent() {
     } catch {
       const ta = document.createElement("textarea");
       ta.value = code;
+      ta.style.position = "absolute";
+      ta.style.left = "-9999px";
       document.body.appendChild(ta);
       ta.select();
       document.execCommand("copy");
@@ -67,88 +74,119 @@ function InviteBridgeContent() {
     track("referral_bridge_cta", { cta_type: "app_download", code });
   }, [code]);
 
+  const fadeIn = (delay: string) =>
+    `transition-opacity duration-500 ${delay} ${isMounted ? "opacity-100" : "opacity-0"}`;
+
   return (
-    <div className="min-h-dvh bg-brand-50 flex flex-col items-center justify-center px-md py-3xl">
-      <div className="w-full max-w-[360px] bg-bg rounded-lg shadow-lg overflow-hidden">
-        {/* 헤더 */}
-        <div className="bg-primary pt-3xl pb-xl px-xl text-center">
-          <div className="mx-auto mb-lg flex h-[72px] w-[72px] items-center justify-center rounded-max bg-white/20">
-            <GiftIcon />
+    <div className="min-h-dvh bg-[#EEF2F6] flex items-center justify-center px-4 py-10">
+      <div className="w-full max-w-[360px] rounded-[32px] bg-white overflow-hidden">
+        {/* [A] Hero */}
+        <div className={fadeIn("")}>
+          <div className="bg-gradient-to-b from-[#E5F4FF] via-[#B2DFFF] to-[#80CAFF] pt-10 pb-8 px-6 text-center relative overflow-hidden">
+            <div className="absolute w-32 h-32 top-[-20px] left-[-40px] rounded-full bg-white/20 blur-xl" />
+            <div className="absolute w-24 h-24 bottom-[-30px] right-[-40px] rounded-full bg-white/20 blur-xl" />
+            <div className="relative w-[72px] h-[72px] rounded-full bg-white/30 flex items-center justify-center mx-auto mb-4">
+              <GiftIcon />
+            </div>
+            <p className="relative text-sm font-medium text-[#1565A0] mb-1">
+              {displayName}님이 보낸
+            </p>
+            <h1 className="relative text-[28px] font-bold text-[#1A3A5C] leading-tight">
+              집정리 3만원 지원금
+            </h1>
           </div>
-          <p className="mb-2xs text-[14px] font-medium text-white/80">
-            {displayName}님이 보낸
-          </p>
-          <h1 className="text-[24px] font-bold leading-tight text-white">
-            집정리 3만원 지원금
-          </h1>
         </div>
 
-        {/* 본문 */}
-        <div className="px-xl py-2xl">
-          <p className="mb-xl text-center text-[14px] leading-relaxed text-text-sub">
-            커버링 앱에서 대형폐기물 수거를
-            <br />
-            <span className="font-semibold text-primary">3만원 할인</span>받고
-            이용하세요
-          </p>
+        {/* [B] Benefit Card */}
+        <div className={`${fadeIn("delay-100")} p-5`}>
+          <div className="bg-gradient-to-r from-[#DDF0FF] to-[#BEE3FF] rounded-2xl p-4 flex items-center gap-4">
+            <div className="w-16 h-16 shrink-0 rounded-full bg-[#1AA3FF] flex items-center justify-center">
+              <span className="text-white text-[13px] font-bold text-center leading-tight">
+                3만원
+              </span>
+            </div>
+            <p className="text-[15px] font-semibold text-[#1A3A5C] leading-snug">
+              커버링 앱 첫 수거 시
+              <br />
+              할인 적용
+            </p>
+          </div>
+        </div>
 
-          {/* 코드 표시 */}
-          {code && (
-            <div className="mb-lg rounded-md bg-bg-warm p-md">
-              <p className="mb-xs text-center text-[12px] text-text-muted">
-                초대코드
-              </p>
-              <p className="text-center text-[20px] font-bold tracking-wider text-text-primary">
+        {/* [C] Code Section */}
+        {code && (
+          <div className={`${fadeIn("delay-200")} px-5 pb-4`}>
+            <span className="text-[11px] text-[#8A9BB0] mb-2 block">
+              초대코드
+            </span>
+            <div className="flex items-center justify-between bg-[#F0F7FF] rounded-xl px-4 py-3">
+              <p className="text-[28px] font-bold tracking-[0.15em] text-[#1A3A5C]">
                 {code}
               </p>
+              {copied ? (
+                <div className="bg-[#E8F8F0] rounded-lg px-3 py-1 text-[13px] font-medium text-[#10B981] shrink-0">
+                  복사 완료!
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleCopyCode}
+                  className="text-[13px] font-medium text-[#1AA3FF] shrink-0"
+                >
+                  복사
+                </button>
+              )}
             </div>
-          )}
-
-          {/* CTA */}
-          <div className="flex flex-col gap-sm">
-            {code && (
-              <button
-                type="button"
-                onClick={handleCopyCode}
-                className="w-full rounded-md border border-primary py-[14px] text-[15px] font-semibold text-primary transition-colors duration-fast hover:bg-primary-tint active:bg-primary-tint"
-              >
-                {copied ? "복사 완료!" : "초대코드 복사"}
-              </button>
-            )}
-            <a
-              href={code ? buildDownloadUrl(code) : AIRBRIDGE_DOWNLOAD_URL}
-              onClick={handleDownload}
-              className="block w-full rounded-md bg-primary py-[14px] text-center text-[15px] font-semibold text-white transition-colors duration-fast hover:bg-primary-dark active:bg-primary-dark"
-            >
-              앱 다운로드
-            </a>
           </div>
+        )}
+
+        {/* [D] CTA */}
+        <div className={`${fadeIn("delay-300")} px-5 pb-6`}>
+          <a
+            href={code ? buildDownloadUrl(code) : AIRBRIDGE_DOWNLOAD_URL}
+            onClick={handleDownload}
+            className="block w-full bg-[#1AA3FF] text-white rounded-2xl py-4 text-center text-[16px] font-bold active:scale-[0.97] transition-transform duration-150"
+          >
+            앱 다운로드하고 할인받기
+          </a>
         </div>
 
-        {/* 하단 안내 */}
-        <div className="px-xl pb-xl">
-          <p className="text-center text-[11px] leading-relaxed text-text-muted">
-            앱 설치 후 초대코드를 입력하면
-            <br />첫 수거 시 3만원 할인이 적용됩니다
-          </p>
+        {/* [E] Footer */}
+        <div className={`${fadeIn("delay-400")} pb-5 text-center`}>
+          <p className="text-[11px] text-[#A0B0BF]">커버링 방문수거</p>
         </div>
       </div>
+    </div>
+  );
+}
 
-      {/* 브랜딩 */}
-      <p className="mt-xl text-[12px] text-text-muted">커버링 방문수거</p>
+function SkeletonLoader() {
+  return (
+    <div className="flex min-h-dvh items-center justify-center bg-[#EEF2F6] px-4 py-10">
+      <div className="w-full max-w-[360px] animate-pulse">
+        <div className="rounded-[32px] bg-white overflow-hidden">
+          <div className="bg-gray-200 pt-10 pb-8 px-6">
+            <div className="h-[72px] w-[72px] rounded-full bg-gray-300 mx-auto mb-4" />
+            <div className="h-4 w-24 bg-gray-300 rounded mx-auto mb-2" />
+            <div className="h-8 w-48 bg-gray-300 rounded mx-auto" />
+          </div>
+          <div className="p-5 space-y-4">
+            <div className="h-[96px] bg-gray-200 rounded-2xl" />
+            <div className="h-[74px] bg-gray-200 rounded-xl" />
+            <div className="h-[56px] bg-gray-200 rounded-2xl" />
+          </div>
+          <div className="pb-5">
+            <div className="h-3 w-20 bg-gray-200 rounded mx-auto" />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
 export function InviteBridge() {
   return (
-    <Suspense
-      fallback={
-        <div className="flex min-h-dvh items-center justify-center bg-brand-50">
-          <div className="h-8 w-8 animate-spin rounded-full border-[3px] border-primary border-t-transparent" />
-        </div>
-      }
-    >
+    <Suspense fallback={<SkeletonLoader />}>
       <InviteBridgeContent />
     </Suspense>
   );

@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { validateToken } from "@/app/api/admin/auth/route";
+import { getInternalApiToken } from "@/lib/server-secrets";
 
 export async function POST(req: NextRequest) {
   try {
     // admin 토큰 검증 (HMAC) 또는 내부 호출 (x-internal-token)
-    const internalToken = process.env.ADMIN_PASSWORD;
+    const internalToken = getInternalApiToken();
     const isInternalCall = !!internalToken && req.headers.get("x-internal-token") === internalToken;
     if (!isInternalCall && !validateToken(req)) {
       return NextResponse.json({ error: "권한이 없습니다" }, { status: 403 });

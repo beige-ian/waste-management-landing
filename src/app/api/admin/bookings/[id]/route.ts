@@ -11,6 +11,7 @@ import {
 } from "@/lib/slack-notify";
 import { sendStatusSms } from "@/lib/sms-notify";
 import { createPaymentLink } from "@/lib/payment-link";
+import { getInternalApiToken } from "@/lib/server-secrets";
 
 // 관리자용 getBookingById (취소된 건 포함)
 async function getBookingByIdAdmin(id: string) {
@@ -174,7 +175,7 @@ export async function PUT(
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "x-internal-token": process.env.ADMIN_PASSWORD || "",
+            "x-internal-token": getInternalApiToken(),
           },
           body: JSON.stringify({
             bookingId: id,

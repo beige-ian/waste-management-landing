@@ -1,18 +1,11 @@
 import crypto from "crypto";
-
-function getSecret(): string {
-  const secret = process.env.ADMIN_PASSWORD;
-  if (!secret) {
-    throw new Error("ADMIN_PASSWORD 환경변수가 설정되지 않았습니다");
-  }
-  return secret;
-}
+import { getBookingTokenSecret } from "@/lib/server-secrets";
 
 /** Generate a booking access token from phone number */
 export function generateBookingToken(phone: string): string {
   const digits = phone.replace(/[^\d]/g, "");
   return crypto
-    .createHmac("sha256", getSecret())
+    .createHmac("sha256", getBookingTokenSecret())
     .update(digits)
     .digest("hex")
     .slice(0, 32);

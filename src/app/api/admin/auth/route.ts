@@ -2,16 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { verifyGoogleToken, getOrCreateAdmin } from "@/lib/google-auth";
 import type { AdminRole } from "@/lib/admin-roles";
+import {
+  getAdminSessionSecret,
+  verifyAdminPassword,
+} from "@/lib/server-secrets";
 
 const SESSION_TTL_MS = 24 * 60 * 60 * 1000;
-
-function getSecret(): string {
-  const secret = process.env.ADMIN_PASSWORD;
-  if (!secret) {
-    throw new Error("ADMIN_PASSWORD 환경변수가 설정되지 않았습니다");
-  }
-  return secret;
-}
 
 /**
  * HMAC 기반 토큰 생성 (서버리스 호환 - 상태 없음)
@@ -23,8 +19,9 @@ function createToken(adminId?: string, email?: string, role: AdminRole = "admin"
   const payload = adminId && email
     ? `${exp}:${adminId}:${email}:${role}`
     : `${exp}:${role}`;
+  const signingSecret = getAdminSessionSecret();
   const signature = crypto
-    .createHmac("sha256", getSecret())
+    .createHmac("sha256", signingSecret)
     .update(payload)
     .digest("hex");
   return {
@@ -58,8 +55,9 @@ export function validateToken(req: NextRequest): boolean {
 
   if (!exp || exp < Date.now()) return false;
 
+  const signingSecret = getAdminSessionSecret();
   const expected = crypto
-    .createHmac("sha256", getSecret())
+    .createHmac("sha256", signingSecret)
     .update(payload)
     .digest("hex");
 
@@ -138,17 +136,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const adminPassword = process.env.ADMIN_PASSWORD;
-    if (!adminPassword) {
-      return NextResponse.json(
-        { error: "관리자 비밀번호가 설정되지 않았습니다" },
-        { status: 500 },
-      );
-    }
-
-    const pwBuf = Buffer.from(password);
-    const expectedBuf = Buffer.from(adminPassword);
-    if (pwBuf.length !== expectedBuf.length || !crypto.timingSafeEqual(pwBuf, expectedBuf)) {
+    if (!verifyAdminPassword(password)) {
       return NextResponse.json(
         { error: "비밀번호가 일치하지 않습니다" },
         { status: 401 },

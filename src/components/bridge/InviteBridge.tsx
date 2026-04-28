@@ -10,7 +10,7 @@ import { KakaoIcon } from "@/components/ui/KakaoIcon";
 const AIRBRIDGE_DOWNLOAD_URL = "https://abr.ge/coveringprod";
 const AIRBRIDGE_DEEPLINK = "coveringapp://";
 const KAKAO_JS_KEY = process.env.NEXT_PUBLIC_KAKAO_JS_KEY;
-const BRIDGE_BASE_URL = "https://waste-management-landing-rose.vercel.app/bridge/invite";
+const BRIDGE_PATH = "/bridge/invite";
 
 function buildDownloadUrl(code?: string) {
   const url = new URL(AIRBRIDGE_DOWNLOAD_URL);
@@ -26,7 +26,11 @@ function buildDownloadUrl(code?: string) {
 
 function buildShareUrl(code: string, name: string) {
   const params = new URLSearchParams({ code, ...(name ? { name } : {}), channel: "kakao_share" });
-  return `${BRIDGE_BASE_URL}?${params.toString()}`;
+  return `${window.location.origin}${BRIDGE_PATH}?${params.toString()}`;
+}
+
+function buildShareImageUrl() {
+  return `${window.location.origin}/images/logo.png`;
 }
 
 function GiftIcon() {
@@ -88,7 +92,7 @@ function InviteBridgeContent() {
       content: {
         title: `${displayName}님이 보낸 집정리 3만원 지원금`,
         description: "커버링 앱 첫 수거 시 3만원 할인",
-        imageUrl: `${BRIDGE_BASE_URL.replace("/bridge/invite", "")}/images/logo.png`,
+        imageUrl: buildShareImageUrl(),
         link: { mobileWebUrl: shareUrl, webUrl: shareUrl },
       },
       buttons: [{ title: "할인받으러 가기", link: { mobileWebUrl: shareUrl, webUrl: shareUrl } }],

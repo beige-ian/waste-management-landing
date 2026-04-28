@@ -8,11 +8,20 @@ import { KakaoIcon } from "@/components/ui/KakaoIcon";
 
 /* 에어브릿지 대시보드에서 트래킹 링크 생성 후 교체 */
 const AIRBRIDGE_DOWNLOAD_URL = "https://abr.ge/coveringprod";
+const AIRBRIDGE_DEEPLINK = "coveringapp://";
 const KAKAO_JS_KEY = process.env.NEXT_PUBLIC_KAKAO_JS_KEY;
 const BRIDGE_BASE_URL = "https://waste-management-landing-rose.vercel.app/bridge/invite";
 
-function buildDownloadUrl(code: string) {
-  return `${AIRBRIDGE_DOWNLOAD_URL}?referral_code=${encodeURIComponent(code)}&channel=referral_bridge`;
+function buildDownloadUrl(code?: string) {
+  const url = new URL(AIRBRIDGE_DOWNLOAD_URL);
+  url.searchParams.set("airbridge_deeplink", AIRBRIDGE_DEEPLINK);
+  url.searchParams.set("channel", "referral_bridge");
+
+  if (code) {
+    url.searchParams.set("referral_code", code);
+  }
+
+  return url.toString();
 }
 
 function buildShareUrl(code: string, name: string) {
@@ -187,7 +196,7 @@ function InviteBridgeContent() {
         {/* [D] CTA */}
         <div className={`${fadeIn("delay-300")} px-5 ${kakaoReady && code ? "pb-3" : "pb-6"}`}>
           <a
-            href={code ? buildDownloadUrl(code) : AIRBRIDGE_DOWNLOAD_URL}
+            href={buildDownloadUrl(code)}
             onClick={handleDownload}
             className="block w-full bg-[#1AA3FF] text-white rounded-2xl py-4 text-center text-[16px] font-bold active:scale-[0.97] transition-transform duration-150"
           >

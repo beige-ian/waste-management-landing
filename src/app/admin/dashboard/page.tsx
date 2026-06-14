@@ -255,7 +255,7 @@ export default function AdminDashboardPage() {
       <div className="sticky top-0 z-10 bg-bg/80 backdrop-blur-[20px] border-b border-border-light">
         <div className="max-w-[56rem] mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h1 className="text-lg font-bold">커버링 방문수거 관리</h1>
+            <h1 className="text-lg font-bold">대형폐기물 어드민</h1>
             {experimentName && (
               <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-semantic-orange-tint text-semantic-orange">
                 {experimentName}: {variant || "미할당"}
@@ -291,6 +291,16 @@ export default function AdminDashboardPage() {
                 <path d="M2 13C2 10.2 4.2 8 7 8C9.8 8 12 10.2 12 13" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
               </svg>
               <span className="max-sm:hidden">기사님</span>
+            </button>
+            <button
+              onClick={() => router.push("/admin/reviews")}
+              className="text-sm text-text-sub hover:text-text-primary transition-colors duration-200 flex items-center gap-1 px-2 py-2"
+            >
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M2 2.5H12V9.5H7L4 12V9.5H2V2.5Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+                <path d="M4.5 5H9.5M4.5 7H8" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+              </svg>
+              <span className="max-sm:hidden">후기 검수</span>
             </button>
             <button
               onClick={exportCSV}

@@ -10,6 +10,7 @@ const RATE_LIMITS: Record<string, { limit: number; windowMs: number }> = {
   "/api/admin/auth": { limit: 5, windowMs: 60_000 },
   "/api/admin/bookings": { limit: 60, windowMs: 60_000 },
   "/api/admin/blocked-slots": { limit: 30, windowMs: 60_000 },
+  "/api/admin/review-submissions": { limit: 60, windowMs: 60_000 },
 };
 
 function findRateLimit(pathname: string): { limit: number; windowMs: number } | null {

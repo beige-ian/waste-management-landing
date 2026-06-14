@@ -67,3 +67,17 @@ export const BookingUpdateSchema = z.object({
 });
 
 export const PhoneSchema = z.string().regex(/^01[0-9]\d{7,8}$/);
+
+export const ReviewSubmissionAdminUpdateSchema = z
+  .object({
+    status: z.enum(["approved", "rejected", "hold"]),
+    rejectReason: z.string().trim().max(100).optional().or(z.literal("")),
+    adminMemo: z.string().trim().max(1000).optional().or(z.literal("")),
+  })
+  .refine(
+    (value) => value.status !== "rejected" || Boolean(value.rejectReason),
+    {
+      message: "반려 사유가 필요합니다",
+      path: ["rejectReason"],
+    },
+  );
